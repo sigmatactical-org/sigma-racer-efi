@@ -891,21 +891,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f8fadd59c855ef2080decdef8ff161eb6661b86933c9d82e5ba29dc602a55aba"
 
 [[package]]
-name = "sigma-efi-board-mre"
-version = "0.1.0"
-dependencies = [
- "sigma-efi-core",
-]
-
-[[package]]
-name = "sigma-efi-core"
-version = "0.1.0"
-dependencies = [
- "libm",
-]
-
-[[package]]
-name = "sigma-efi-firmware"
+name = "sigma-efi"
 version = "0.1.0"
 dependencies = [
  "cortex-m",
@@ -916,9 +902,8 @@ dependencies = [
  "embassy-executor",
  "embassy-stm32",
  "embassy-time",
+ "libm",
  "panic-probe",
- "sigma-efi-board-mre",
- "sigma-efi-core",
  "static_cell",
 ]
 

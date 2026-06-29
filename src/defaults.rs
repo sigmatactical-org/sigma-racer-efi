@@ -1,7 +1,7 @@
 //! Default engine and board configuration for Rotax V990 on microRusEFI.
 
-use sigma_efi_core::config::EngineConfig;
-use sigma_efi_core::engines::rotax_v990::{self, Profile};
+use crate::config::EngineConfig;
+use crate::engines::rotax_v990::{self, Profile};
 
 /// Target engine for this firmware build.
 pub const ENGINE_ID: &str = "Rotax V990";
@@ -23,8 +23,9 @@ pub const TARGET_MCU: &str = "STM32F767VI";
 
 /// Logical outputs and sensors for the V990 on microRusEFI.
 pub mod wiring {
+    use crate::analog::{CLT_NTC, IAT_NTC};
+    use crate::engines::rotax_v990::{CYLINDER_FRONT, CYLINDER_REAR};
     use crate::pins::{BoardPins, GpioPin, GpioPort, TrellOutput};
-    use sigma_efi_core::engines::rotax_v990::{CYLINDER_FRONT, CYLINDER_REAR};
 
     /// Front cylinder — injector 1 / ignition 1.
     pub const FRONT_INJECTOR: TrellOutput = TrellOutput::Injector1;
@@ -66,8 +67,8 @@ pub mod wiring {
 
     /// Default analog inputs for speed-density tuning on a naked bike/engine swap.
     pub mod sensors {
-        use crate::analog::{CLT_NTC, IAT_NTC};
-        use sigma_efi_core::sensors::{AdcChannel, NtcConfig};
+        use super::{CLT_NTC, IAT_NTC};
+        use crate::sensors::{AdcChannel, NtcConfig};
 
         pub const CLT: AdcChannel = AdcChannel::CoolantTemp;
         pub const IAT: AdcChannel = AdcChannel::IntakeTemp;
@@ -97,7 +98,7 @@ mod tests {
 
     #[test]
     fn cylinder_wiring_maps_front_and_rear() {
-        use sigma_efi_core::engines::rotax_v990::{CYLINDER_FRONT, CYLINDER_REAR};
+        use crate::engines::rotax_v990::{CYLINDER_FRONT, CYLINDER_REAR};
 
         assert_eq!(
             wiring::injector_for(CYLINDER_FRONT),

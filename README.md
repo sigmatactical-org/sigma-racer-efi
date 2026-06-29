@@ -20,7 +20,7 @@ Licensed under **MIT OR Apache-2.0** (see `LICENSE-MIT` and `LICENSE-APACHE`). r
 | Idle | 1,350 RPM | Stable warm idle for 998 cc twin |
 | Rev limit | 10,200 soft / 10,500 hard | Aprilia sport redline |
 
-Profile: `crates/core/src/engines/rotax_v990.rs` · Wiring: `crates/board-mre/src/defaults.rs` (`wiring`).
+Profile: `src/engines/rotax_v990.rs` · Wiring: `src/defaults.rs` (`wiring`).
 
 ## Hardware
 
@@ -32,16 +32,13 @@ Profile: `crates/core/src/engines/rotax_v990.rs` · Wiring: `crates/board-mre/sr
 | ETB driver | TLE9201 |
 | rusEFI board profile | `meta-info-mre_f7.env` |
 
-Pin assignments live in `crates/board-mre/src/pins.rs`, derived from rusEFI's `board_configuration.cpp` and `connectors/main.yaml`.
+Pin assignments live in `src/pins.rs`, derived from rusEFI's `board_configuration.cpp` and `connectors/main.yaml`.
 
-## Workspace layout
+## Layout
 
 ```
 efi/
-├── crates/
-│   ├── core/          # no_std engine types, fuel/trigger stubs
-│   ├── board-mre/     # microRusEFI pins, ADC map, defaults
-│   └── firmware/      # Embassy binary (STM32F767)
+├── src/               # library + firmware binary
 ├── rust-toolchain.toml
 └── .cargo/config.toml
 ```
@@ -58,19 +55,19 @@ Build firmware:
 
 ```bash
 cd efi
-cargo build -p sigma-efi-firmware --release --target thumbv7em-none-eabihf
+cargo build --features firmware --release --target thumbv7em-none-eabihf
 ```
 
 Flash (requires [probe-rs](https://probe.rs/) and a SWD probe):
 
 ```bash
-probe-rs run --chip STM32F767VI target/thumbv7em-none-eabihf/release/sigma-efi-firmware
+probe-rs run --chip STM32F767VI target/thumbv7em-none-eabihf/release/sigma-efi
 ```
 
 Run host unit tests:
 
 ```bash
-cargo test -p sigma-efi-core -p sigma-efi-board-mre
+cargo test
 ```
 
 ## Current status
@@ -80,7 +77,7 @@ Bring-up firmware only:
 - Blinks the **running** LED (PE4) and **comms** LED (PE2)
 - Logs board identity via defmt-rtt
 - Core crate holds configuration types and placeholder fuel math
-- Task modules stubbed (`firmware/src/tasks/`)
+- Task modules stubbed (`src/bin/tasks/`)
 
 ## Roadmap (rusEFI parity)
 

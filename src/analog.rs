@@ -1,6 +1,6 @@
 //! Analog front-end constants from rusEFI `setupVbatt()` and sensor defaults.
 
-use sigma_efi_core::sensors::{AdcChannel, AnalogScaling, NtcConfig};
+use crate::sensors::{AdcChannel, AnalogScaling, NtcConfig};
 
 /// ADC reference voltage on microRusEFI.
 pub const ADC_VREF: f32 = 3.3;

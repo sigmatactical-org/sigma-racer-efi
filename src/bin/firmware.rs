@@ -5,7 +5,7 @@ use defmt::info;
 use embassy_executor::Spawner;
 use embassy_stm32::gpio::{Level, Output, Speed};
 use embassy_time::Timer;
-use sigma_efi_board_mre::{ENGINE_ID, FIRMWARE_ID, TARGET_MCU, default_profile, pins::BoardPins};
+use sigma_efi::{ENGINE_ID, FIRMWARE_ID, TARGET_MCU, default_profile, pins::BoardPins};
 use {defmt_rtt as _, panic_probe as _};
 
 mod tasks;
