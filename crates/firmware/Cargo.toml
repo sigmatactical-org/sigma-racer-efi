@@ -1,0 +1,45 @@
+[package]
+name = "sigma-efi-firmware"
+version = "0.1.0"
+description = "Embassy firmware for microRusEFI (STM32F767)"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
+publish = false
+
+[dependencies]
+sigma-efi-board-mre = { path = "../board-mre" }
+sigma-efi-core = { path = "../core" }
+
+embassy-stm32 = { version = "0.6.0", features = [
+    "defmt",
+    "stm32f767vi",
+    "memory-x",
+    "time-driver-any",
+    "exti",
+    "single-bank",
+] }
+embassy-executor = { version = "0.10.0", features = [
+    "platform-cortex-m",
+    "executor-thread",
+    "defmt",
+] }
+embassy-time = { version = "0.5.1", features = [
+    "defmt",
+    "defmt-timestamp-uptime",
+    "tick-hz-32_768",
+] }
+
+defmt = "1.0.1"
+defmt-rtt = "1.0.0"
+cortex-m = { version = "0.7.6", features = ["inline-asm", "critical-section-single-core"] }
+cortex-m-rt = "0.7.0"
+panic-probe = { version = "1.0.0", features = ["print-defmt"] }
+critical-section = "1.1"
+static_cell = "2"
+
+[package.metadata.embassy]
+build = [
+    { target = "thumbv7em-none-eabihf", artifact-dir = "target/thumbv7em-none-eabihf/release" },
+]
