@@ -94,16 +94,11 @@ pub mod wiring {
 #[cfg(test)]
 mod tests {
     use super::wiring;
-    use crate::engines::{rotax_v990, yamaha_cp3};
+    use crate::engines::yamaha_cp3;
 
     #[test]
     fn yamaha_cp3_fits_mre_outputs() {
         assert!(wiring::validate_profile(&yamaha_cp3::profile()).is_ok());
-    }
-
-    #[test]
-    fn rotax_v990_fits_mre_outputs() {
-        assert!(wiring::validate_profile(&rotax_v990::profile()).is_ok());
     }
 
     #[test]

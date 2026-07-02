@@ -13,8 +13,7 @@ src/
 ├── config.rs          # EngineConfig, injection/ignition modes, firing presets
 ├── engines/
 │   ├── profile.rs     # EngineProfile (shared struct)
-│   ├── yamaha_cp3.rs  # Yamaha CP3 triple
-│   └── rotax_v990.rs  # Rotax V990 V-twin
+│   └── yamaha_cp3.rs  # Yamaha CP3 triple
 ├── defaults.rs        # MRE wiring (maps cylinder index → outputs)
 └── pins.rs            # STM32 pin map
 ```
@@ -26,7 +25,6 @@ Pick an engine at **compile time** with Cargo features. Add a new engine by crea
 | Feature | Engine | Cylinders |
 |---------|--------|-----------|
 | `engine-yamaha-cp3` | Yamaha CP3 (MT-09, XSR900, R9) | 3 |
-| `engine-rotax-v990` | Rotax V990 (Aprilia RSV, Spyder) | 2 |
 
 ## Hardware
 
@@ -48,13 +46,11 @@ Install the embedded target once:
 rustup target add thumbv7em-none-eabihf
 ```
 
-Build firmware (choose one engine feature):
+Build firmware:
 
 ```bash
 cd embedded/efi
 cargo build --features firmware,engine-yamaha-cp3 --release --target thumbv7em-none-eabihf
-# or
-cargo build --features firmware,engine-rotax-v990 --release --target thumbv7em-none-eabihf
 ```
 
 Flash (requires [probe-rs](https://probe.rs/) and a SWD probe):
@@ -99,4 +95,3 @@ Priority order for porting rusEFI subsystems into Rust:
 - [rusEFI microRusEFI wiring wiki](https://wiki.rusefi.com/Hardware-microRusEfi-wiring)
 - [Embassy STM32F767 docs](https://docs.embassy.dev/embassy-stm32/git/stm32f767vi/index.html)
 - [Yamaha CP3 engine overview](https://motofomo.com/yamaha-cp3-history-models/)
-- [Rotax V990 overview](https://de.zxc.wiki/wiki/Rotax_V990)

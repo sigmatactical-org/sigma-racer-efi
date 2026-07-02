@@ -21,7 +21,6 @@ required-features = ["firmware"]
 [features]
 default = []
 engine-yamaha-cp3 = []
-engine-rotax-v990 = []
 firmware = [
     "dep:embassy-stm32",
     "dep:embassy-executor",
