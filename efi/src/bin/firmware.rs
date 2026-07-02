@@ -5,7 +5,9 @@ use defmt::info;
 use embassy_executor::Spawner;
 use embassy_stm32::gpio::{Level, Output, Speed};
 use embassy_time::Timer;
-use sigma_efi::{ENGINE_ID, FIRMWARE_ID, TARGET_MCU, default_profile, pins::BoardPins};
+use sigma_efi::{
+    FIRMWARE_ID, TARGET_MCU, active_profile, defaults::wiring, pins::BoardPins,
+};
 use {defmt_rtt as _, panic_probe as _};
 
 mod tasks;
@@ -13,21 +15,24 @@ mod tasks;
 #[embassy_executor::main]
 async fn main(spawner: Spawner) {
     let pins = BoardPins::mre_f7();
-    let profile = default_profile();
-    let config = profile.engine;
+    let profile = active_profile();
+
+    wiring::validate_profile(&profile).unwrap();
 
     let p = embassy_stm32::init(Default::default());
 
-    info!("{} starting on {} ({})", FIRMWARE_ID, TARGET_MCU, ENGINE_ID);
+    info!(
+        "{} on {} — engine: {}",
+        FIRMWARE_ID, TARGET_MCU, profile.id
+    );
     info!(
         "Engine: {} cylinders, {} cc",
-        config.cylinders, config.displacement_cc
+        profile.engine.cylinders, profile.engine.displacement_cc
     );
 
     let mut running_led = Output::new(p.PE4, Level::Low, Speed::Low);
     let comms_led = Output::new(p.PE2, Level::Low, Speed::Low);
 
-    // Sanity check: board pin constants match the Embassy PAC pin names we drive.
     assert_eq!(pins.led_running.pin, 4);
     assert_eq!(pins.led_comms.pin, 2);
 

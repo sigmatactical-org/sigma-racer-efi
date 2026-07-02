@@ -4,23 +4,29 @@ Rust engine control firmware for the [microRusEFI](https://www.shop.rusefi.com/s
 
 Licensed under **MIT OR Apache-2.0** (see `LICENSE-MIT` and `LICENSE-APACHE`). rusEFI itself is GPL; this project reimplements algorithms and maps hardware from public board documentation — it does not incorporate rusEFI source code.
 
-## Target engine
+## Architecture
 
-**Rotax V990** — locked-in best defaults for a microRusEFI swap (`Profile::best()`).
+The core is **engine-agnostic**. Board support (microRusEFI pins, ADC scaling) lives separately from engine profiles (cylinder count, firing order, trigger wheel, rev limits).
 
-| Parameter | Best default | Rationale |
-|-----------|--------------|-----------|
-| Cylinders | 2 (front = 0, rear = 1) | 60° V-twin |
-| Displacement | 998 cc | Factory spec |
-| Firing | 300° / 420° uneven | OEM crank timing |
-| Crank trigger | 6 pulses/rev, 60° apart, VR | Aprilia OEM pattern, MRE pin 45 |
-| Cam trigger | Hall, required | Sequential phase sync, MRE pin 25 |
-| Spark | 1 plug + 1 coil per cyl | Post-2004 Aprilia / Spyder layout |
-| Injection | Sequential (simul. cranking) | OEM EFI behavior |
-| Idle | 1,350 RPM | Stable warm idle for 998 cc twin |
-| Rev limit | 10,200 soft / 10,500 hard | Aprilia sport redline |
+```
+src/
+├── config.rs          # EngineConfig, injection/ignition modes, firing presets
+├── engines/
+│   ├── profile.rs     # EngineProfile (shared struct)
+│   ├── yamaha_cp3.rs  # Yamaha CP3 triple
+│   └── rotax_v990.rs  # Rotax V990 V-twin
+├── defaults.rs        # MRE wiring (maps cylinder index → outputs)
+└── pins.rs            # STM32 pin map
+```
 
-Profile: `src/engines/rotax_v990.rs` · Wiring: `src/defaults.rs` (`wiring`).
+Pick an engine at **compile time** with Cargo features. Add a new engine by creating `src/engines/your_engine.rs` and a matching feature flag.
+
+### Built-in engine profiles
+
+| Feature | Engine | Cylinders |
+|---------|--------|-----------|
+| `engine-yamaha-cp3` | Yamaha CP3 (MT-09, XSR900, R9) | 3 |
+| `engine-rotax-v990` | Rotax V990 (Aprilia RSV, Spyder) | 2 |
 
 ## Hardware
 
@@ -34,15 +40,6 @@ Profile: `src/engines/rotax_v990.rs` · Wiring: `src/defaults.rs` (`wiring`).
 
 Pin assignments live in `src/pins.rs`, derived from rusEFI's `board_configuration.cpp` and `connectors/main.yaml`.
 
-## Layout
-
-```
-efi/
-├── src/               # library + firmware binary
-├── rust-toolchain.toml
-└── .cargo/config.toml
-```
-
 ## Build
 
 Install the embedded target once:
@@ -51,11 +48,13 @@ Install the embedded target once:
 rustup target add thumbv7em-none-eabihf
 ```
 
-Build firmware:
+Build firmware (choose one engine feature):
 
 ```bash
-cd efi
-cargo build --features firmware --release --target thumbv7em-none-eabihf
+cd embedded/efi
+cargo build --features firmware,engine-yamaha-cp3 --release --target thumbv7em-none-eabihf
+# or
+cargo build --features firmware,engine-rotax-v990 --release --target thumbv7em-none-eabihf
 ```
 
 Flash (requires [probe-rs](https://probe.rs/) and a SWD probe):
@@ -75,7 +74,7 @@ cargo test
 Bring-up firmware only:
 
 - Blinks the **running** LED (PE4) and **comms** LED (PE2)
-- Logs board identity via defmt-rtt
+- Logs board + selected engine profile via defmt-rtt
 - Core crate holds configuration types and placeholder fuel math
 - Task modules stubbed (`src/bin/tasks/`)
 
@@ -99,5 +98,5 @@ Priority order for porting rusEFI subsystems into Rust:
 - [microRusEFI hardware repo](https://github.com/rusefi/hw_microRusEfi)
 - [rusEFI microRusEFI wiring wiki](https://wiki.rusefi.com/Hardware-microRusEfi-wiring)
 - [Embassy STM32F767 docs](https://docs.embassy.dev/embassy-stm32/git/stm32f767vi/index.html)
+- [Yamaha CP3 engine overview](https://motofomo.com/yamaha-cp3-history-models/)
 - [Rotax V990 overview](https://de.zxc.wiki/wiki/Rotax_V990)
-- [Aprilia / Rotax crank trigger pattern](https://www.island-underground.com/aprilia/aprilia-fuel-injection/ecu-hardware/ecu-inputs/crankcam-position)

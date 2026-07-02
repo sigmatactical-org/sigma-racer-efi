@@ -55,12 +55,13 @@ impl EngineState {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::config::EngineConfig;
 
     #[test]
     fn cranking_injection_is_fixed() {
+        use crate::engines::yamaha_cp3;
+
         let mut state = EngineState::default();
-        let ms = state.compute_base_injection_ms(&EngineConfig::default());
+        let ms = state.compute_base_injection_ms(&yamaha_cp3::profile().engine);
         assert_eq!(ms, 3.0);
     }
 }

@@ -3,7 +3,7 @@
 /// Sensor type wired to a trigger input.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TriggerInputKind {
-    /// Variable reluctance (e.g. OEM Rotax crank via VR conditioner).
+    /// Variable reluctance crank/cam pickup.
     Vr,
     /// Hall-effect digital sensor.
     Hall,
@@ -55,11 +55,11 @@ impl TriggerWheel {
         }
     }
 
-    /// Six equally spaced crank reference pulses (Rotax V990 / Aprilia OEM pattern).
-    pub const fn rotax_v990() -> Self {
+    /// 12-1 wheel — common aftermarket pattern for high-RPM motorcycle ECU swaps.
+    pub const fn twelve_minus_one() -> Self {
         Self {
-            teeth: 6,
-            missing: 0,
+            teeth: 12,
+            missing: 1,
         }
     }
 
@@ -82,8 +82,8 @@ mod tests {
 
     #[test]
     fn rpm_from_period_at_idle() {
-        // 1,350 RPM, 6 crank edges/rev: period ≈ 7,407 µs
-        let rpm = rpm_from_period_us(7_407, 6);
-        assert!((rpm - 1_350.0).abs() < 50.0);
+        // 1,200 RPM, 11 crank edges/rev (12-1): period ≈ 4,545 µs
+        let rpm = rpm_from_period_us(4_545, 11);
+        assert!((rpm - 1_200.0).abs() < 50.0);
     }
 }
