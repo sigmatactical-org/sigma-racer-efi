@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@1.90.0
+        with:
+          components: clippy
+          targets: thumbv7em-none-eabihf
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Host tests
+        run: cargo test
+
+      - name: Host clippy
+        run: cargo clippy --all-targets -- -D warnings
+
+      - name: Firmware clippy
+        run: cargo clippy --features firmware,engine-yamaha-cp3 --target thumbv7em-none-eabihf -- -D warnings
+
+      - name: Firmware release build
+        run: cargo build --features firmware,engine-yamaha-cp3 --target thumbv7em-none-eabihf --release
