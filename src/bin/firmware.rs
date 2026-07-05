@@ -5,7 +5,7 @@ use defmt::info;
 use embassy_executor::Spawner;
 use embassy_stm32::gpio::{Level, Speed};
 use embassy_time::Timer;
-use sigmaracer_efi::{
+use sigma_racer_efi::{
     FIRMWARE_ID, TARGET_MCU, active_profile, defaults::wiring, pins::BoardPins,
     pins::embassy,
 };

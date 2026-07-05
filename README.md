@@ -49,14 +49,14 @@ rustup target add thumbv7em-none-eabihf
 Build firmware:
 
 ```bash
-cd embedded/sigmaracer-efi
+cd embedded/sigma-racer-efi
 cargo build --features firmware,engine-yamaha-cp3 --release --target thumbv7em-none-eabihf
 ```
 
 Flash (requires [probe-rs](https://probe.rs/) and a SWD probe):
 
 ```bash
-probe-rs run --chip STM32F767VI target/thumbv7em-none-eabihf/release/sigmaracer-efi
+probe-rs run --chip STM32F767VI target/thumbv7em-none-eabihf/release/sigma-racer-efi
 ```
 
 Run host unit tests:
