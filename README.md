@@ -1,4 +1,4 @@
-# Sigma EFI
+# Sigma Racer EFI
 
 Rust engine control firmware for the [microRusEFI](https://www.shop.rusefi.com/shop/p/microrusefi-assembled-ecu-development-module) ECU, built on [Embassy](https://embassy.dev/) and conceptually ported from [rusEFI](https://github.com/rusefi/rusefi).
 
@@ -49,14 +49,14 @@ rustup target add thumbv7em-none-eabihf
 Build firmware:
 
 ```bash
-cd embedded/efi
+cd embedded/sigmaracer-efi
 cargo build --features firmware,engine-yamaha-cp3 --release --target thumbv7em-none-eabihf
 ```
 
 Flash (requires [probe-rs](https://probe.rs/) and a SWD probe):
 
 ```bash
-probe-rs run --chip STM32F767VI target/thumbv7em-none-eabihf/release/sigma-efi
+probe-rs run --chip STM32F767VI target/thumbv7em-none-eabihf/release/sigmaracer-efi
 ```
 
 Run host unit tests:

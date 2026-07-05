@@ -1,5 +1,5 @@
 [package]
-name = "sigma-efi"
+name = "sigmaracer-efi"
 version = "0.1.0"
 description = "Embassy firmware for microRusEFI (STM32F767) — engine-agnostic ECU core"
 edition = "2024"
@@ -11,10 +11,10 @@ publish = false
 [workspace]
 
 [lib]
-name = "sigma_efi"
+name = "sigmaracer_efi"
 
 [[bin]]
-name = "sigma-efi"
+name = "sigmaracer-efi"
 path = "src/bin/firmware.rs"
 required-features = ["firmware"]
 

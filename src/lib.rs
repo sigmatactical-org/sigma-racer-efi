@@ -1,4 +1,4 @@
-//! Engine control types and microRusEFI board support for Sigma EFI.
+//! Engine control types and microRusEFI board support for Sigma Racer EFI.
 //!
 //! Core logic is `#![no_std]` and engine-agnostic. Select an engine at
 //! compile time via Cargo features (`engine-yamaha-cp3`).
