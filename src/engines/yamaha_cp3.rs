@@ -18,6 +18,12 @@ pub fn profile() -> EngineProfile {
             displacement_cc: 890,
             target_idle_rpm: 1_200,
         },
+        // ⚠ [MEASURE] — PLACEHOLDER trigger geometry, not characterization.
+        // Wheel pattern and sensor types (VR vs Hall!) must be read off the
+        // actual engine in mule Phase 1; the project rule is characterize,
+        // don't invent. The stage-1 data logger never consumes these; the
+        // decoder must refuse to run until they are replaced with measured
+        // values. Firmware warns about this at boot.
         trigger: TriggerSetup {
             crank_wheel: TriggerWheel {
                 teeth: 12,
@@ -28,7 +34,10 @@ pub fn profile() -> EngineProfile {
             cam_required: true,
         },
         cycle_degrees: CYCLE_DEGREES_FOUR_STROKE,
+        // Even-firing triple: 240° spacing is engine architecture, not a guess.
         fire_intervals_deg: &[240, 240, 240],
+        // ⚠ [MEASURE] — placeholder limits near the factory ~10.5k redline;
+        // confirm against Yamaha service data before any control stage.
         soft_rev_limit_rpm: 10_400,
         hard_rev_limit_rpm: 11_000,
         spark_plugs_per_cylinder: 1,

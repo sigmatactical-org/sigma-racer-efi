@@ -6,9 +6,6 @@ use crate::timing::TriggerSetup;
 /// Full engine cycle in crank degrees for a four-stroke Otto cycle.
 pub const CYCLE_DEGREES_FOUR_STROKE: u16 = 720;
 
-/// Full engine cycle in crank degrees for a two-stroke engine.
-pub const CYCLE_DEGREES_TWO_STROKE: u16 = 360;
-
 /// Complete configuration for one engine type (factory specs + trigger pattern).
 #[derive(Clone, Debug, PartialEq)]
 pub struct EngineProfile {

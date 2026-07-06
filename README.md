@@ -67,12 +67,30 @@ cargo test
 
 ## Current status
 
-Bring-up firmware only:
+**Stage 1 — characterization data logger** (mule runbook Phase 1):
 
-- Blinks the **running** LED (PE4) and **comms** LED (PE2)
-- Logs board + selected engine profile via defmt-rtt
-- Core crate holds configuration types and placeholder fuel math
-- Task modules stubbed (`src/bin/tasks/`)
+- 216 MHz sysclk from HSI (works on any board; switch the PLL source to
+  HSE for CAN-grade accuracy once the fitted crystal is verified)
+- 1 MHz embassy-time tick → µs timestamps on every record
+- `MreBoard::init` splits `Peripherals` in one place: LEDs, ADC1 sweep
+  channels, crank (PC6/EXTI6) and cam (PA5/EXTI5) inputs
+- Analog sweep at 100 Hz — VBatt / CLT / IAT / TPS-MAP / AN volt 1–2,
+  scaled with the rusEFI front-end constants, published via `Watch` and
+  streamed as `DL,S` records at 10 Hz
+- Crank/cam edge capture with per-line interval stats streamed as `DL,T`
+  records — the gap-ratio column exposes the missing-tooth signature
+  without assuming wheel geometry (characterization-grade; the
+  input-capture decoder replaces this for engine control)
+- Blinks **running** (PE4) / **comms** (PE2); **critical** (PE3)
+  fast-blink = safe state (invalid profile or task-spawn failure)
+
+Record formats (defmt over RTT, parse with `probe-rs` + `defmt-print`):
+
+```text
+DL,S,<t_us>,<vbatt_v>,<clt_c>,<iat_c>,<tps_map_v>,<an1_v>,<an2_v>
+DL,T,<C|V>,<count>,<t_us>,<period_us>,<gap_ratio_x100>
+DL,X,dropped_edges,<n>
+```
 
 ## Roadmap (rusEFI parity)
 

@@ -1,9 +1,15 @@
-//! Background task modules (stubs mirroring rusEFI subsystem boundaries).
+//! Background tasks (subsystem boundaries mirror rusEFI's).
 //!
-//! Planned modules:
-//! - `trigger` — crank/cam decoding, tooth scheduler
+//! Implemented (stage 1 — characterization data logger):
+//! - `sensors` — ADC sweep of the analog channels, `DL,S` records
+//! - `trigger` — crank/cam edge capture + interval stats, `DL,T` records
+//!
+//! Planned:
+//! - trigger decoding proper (tooth scheduler, sync state machine)
 //! - `fuel` — injection scheduling via TLE8888
 //! - `ignition` — coil charging and fire timing
-//! - `sensors` — ADC sampling, MAP/CLT/IAT processing
 //! - `can` — rusEFI-compatible protocol (future)
 //! - `etb` — electronic throttle via TLE9201
+
+pub mod sensors;
+pub mod trigger;
