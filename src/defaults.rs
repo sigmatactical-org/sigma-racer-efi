@@ -39,8 +39,8 @@ pub mod wiring {
         INJECTORS.get(cylinder as usize).copied()
     }
 
-    pub fn ignition_for(cylinder: u8) -> Option<GpioPin> {
-        BoardPins::mre_f7().ignition.get(cylinder as usize).copied()
+    pub fn ignition_for(pins: &BoardPins, cylinder: u8) -> Option<GpioPin> {
+        pins.ignition.get(cylinder as usize).copied()
     }
 
     /// Returns `Ok(())` when the profile fits microRusEFI (≤4 cylinders, outputs exist).
@@ -51,8 +51,10 @@ pub mod wiring {
             return Err(WiringError::TooManyCylinders);
         }
 
+        // Build the board pin map once, not once per cylinder.
+        let pins = BoardPins::mre_f7();
         for &cyl in profile.engine.firing_sequence {
-            if injector_for(cyl).is_none() || ignition_for(cyl).is_none() {
+            if injector_for(cyl).is_none() || ignition_for(&pins, cyl).is_none() {
                 return Err(WiringError::MissingOutput);
             }
         }
@@ -118,8 +120,9 @@ mod tests {
 
         assert_eq!(wiring::injector_for(0), Some(TleOutput::Injector1));
         assert_eq!(wiring::injector_for(2), Some(TleOutput::Injector3));
+        let pins = crate::pins::BoardPins::mre_f7();
         assert_eq!(
-            wiring::ignition_for(1),
+            wiring::ignition_for(&pins, 1),
             Some(GpioPin::new(GpioPort::D, 3))
         );
     }

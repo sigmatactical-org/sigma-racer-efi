@@ -46,6 +46,15 @@ impl EngineProfile {
             return Err(ProfileError::InvalidSparkPlugCount);
         }
 
+        // Rev limits are safety-critical: both must be non-zero and the soft
+        // (fuel/spark-cut warning) limit must not exceed the hard (absolute) limit.
+        if self.soft_rev_limit_rpm == 0 || self.hard_rev_limit_rpm == 0 {
+            return Err(ProfileError::InvalidRevLimit);
+        }
+        if self.soft_rev_limit_rpm > self.hard_rev_limit_rpm {
+            return Err(ProfileError::RevLimitOrder);
+        }
+
         Ok(())
     }
 }
@@ -57,10 +66,39 @@ pub enum ProfileError {
     FireIntervalCount,
     FireIntervalSum,
     InvalidSparkPlugCount,
+    /// A rev limit was zero.
+    InvalidRevLimit,
+    /// The soft rev limit exceeds the hard rev limit.
+    RevLimitOrder,
 }
 
 impl From<crate::config::ConfigError> for ProfileError {
     fn from(err: crate::config::ConfigError) -> Self {
         Self::EngineConfig(err)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::engines::yamaha_cp3;
+
+    #[test]
+    fn reference_profile_is_valid() {
+        assert_eq!(yamaha_cp3::profile().validate(), Ok(()));
+    }
+
+    #[test]
+    fn rejects_zero_rev_limit() {
+        let mut p = yamaha_cp3::profile();
+        p.soft_rev_limit_rpm = 0;
+        assert_eq!(p.validate(), Err(ProfileError::InvalidRevLimit));
+    }
+
+    #[test]
+    fn rejects_soft_above_hard_rev_limit() {
+        let mut p = yamaha_cp3::profile();
+        p.soft_rev_limit_rpm = p.hard_rev_limit_rpm + 100;
+        assert_eq!(p.validate(), Err(ProfileError::RevLimitOrder));
     }
 }
