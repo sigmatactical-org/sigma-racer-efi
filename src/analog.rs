@@ -17,16 +17,25 @@ pub const VBATT_SCALING: AnalogScaling = AnalogScaling {
 };
 
 /// rusEFI default CLT/IAT pull-up on microRusEFI (2.7 kΩ).
+///
+/// ⚠ [MEASURE] — `bias_supply_volts` (wiki says the AT pull-up goes to 5 V)
+/// and `input_divider` (whether the AT path passes the 1.68 divider) are
+/// placeholders until the Session-0 warmup fit / resistor check settles them
+/// (see the stage-1 wiring doc in the specs repo).
 pub const CLT_NTC: NtcConfig = NtcConfig {
     bias_resistor_ohms: 2_700.0,
     beta: 3_500.0,
     resistance_at_25c: 2_500.0,
+    bias_supply_volts: 5.0,
+    input_divider: 1.0,
 };
 
 pub const IAT_NTC: NtcConfig = NtcConfig {
     bias_resistor_ohms: 2_700.0,
     beta: 3_500.0,
     resistance_at_25c: 2_500.0,
+    bias_supply_volts: 5.0,
+    input_divider: 1.0,
 };
 
 /// Maps logical channels to STM32 ADC inputs (EFI_ADC_x from rusEFI naming).

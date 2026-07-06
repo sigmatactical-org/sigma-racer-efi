@@ -95,11 +95,11 @@ pub mod wiring {
         }
 
         pub fn clt_celsius_from_adc(adc_volts: f32) -> f32 {
-            CLT_THERMISTOR.volts_to_celsius(adc_volts, ADC_VREF)
+            CLT_THERMISTOR.volts_to_celsius(adc_volts)
         }
 
         pub fn iat_celsius_from_adc(adc_volts: f32) -> f32 {
-            IAT_THERMISTOR.volts_to_celsius(adc_volts, ADC_VREF)
+            IAT_THERMISTOR.volts_to_celsius(adc_volts)
         }
     }
 }

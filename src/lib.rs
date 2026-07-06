@@ -8,10 +8,12 @@
 pub mod analog;
 pub mod config;
 pub mod datalog;
+pub mod decoder;
 pub mod defaults;
 pub mod engine;
 pub mod engines;
 pub mod pins;
+pub mod rbw;
 pub mod sensors;
 pub mod timing;
 

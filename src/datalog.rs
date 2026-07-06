@@ -56,8 +56,8 @@ impl SensorFrame {
         Self {
             t_us,
             vbatt_v: VBATT_SCALING.raw_to_volts(sweep.vbatt),
-            clt_c: CLT_NTC.volts_to_celsius(sweep.clt, ADC_VREF),
-            iat_c: IAT_NTC.volts_to_celsius(sweep.iat, ADC_VREF),
+            clt_c: CLT_NTC.volts_to_celsius(sweep.clt),
+            iat_c: IAT_NTC.volts_to_celsius(sweep.iat),
             tps_map_v: sweep.tps_map * ANALOG_INPUT_DIVIDER,
             an_volt1_v: sweep.an_volt1 * ANALOG_INPUT_DIVIDER,
             an_volt2_v: sweep.an_volt2 * ANALOG_INPUT_DIVIDER,
@@ -138,13 +138,7 @@ impl EdgeIntervals {
     }
 }
 
-/// Estimate crank RPM from one tooth period, given teeth per revolution.
-pub fn rpm_from_tooth_period(period_us: u32, teeth_per_rev: u32) -> f32 {
-    if period_us == 0 || teeth_per_rev == 0 {
-        return 0.0;
-    }
-    60_000_000.0 / (period_us as f32 * teeth_per_rev as f32)
-}
+pub use crate::timing::rpm_from_period_us;
 
 #[cfg(test)]
 mod tests {
@@ -220,9 +214,9 @@ mod tests {
     #[test]
     fn rpm_from_period_matches_wheel_math() {
         // 60 teeth at 1000 rpm → one tooth per millisecond.
-        let rpm = rpm_from_tooth_period(1_000, 60);
+        let rpm = rpm_from_period_us(1_000, 60);
         assert!((rpm - 1_000.0).abs() < 0.01);
-        assert_eq!(rpm_from_tooth_period(0, 60), 0.0);
-        assert_eq!(rpm_from_tooth_period(1_000, 0), 0.0);
+        assert_eq!(rpm_from_period_us(0, 60), 0.0);
+        assert_eq!(rpm_from_period_us(1_000, 0), 0.0);
     }
 }
