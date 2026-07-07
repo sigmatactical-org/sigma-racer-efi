@@ -15,6 +15,7 @@ pub mod decoder;
 pub mod defaults;
 pub mod engine;
 pub mod engines;
+pub mod fueling;
 #[cfg(feature = "firmware")]
 pub mod heap;
 pub mod pins;
@@ -23,6 +24,7 @@ pub mod replay;
 pub mod scheduler;
 pub mod safety;
 pub mod sensors;
+pub mod tables;
 pub mod timing;
 pub mod tle8888;
 
