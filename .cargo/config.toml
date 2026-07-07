@@ -3,3 +3,6 @@ runner = "probe-rs run --chip STM32F767VI"
 
 [env]
 DEFMT_LOG = "info"
+
+[net]
+git-fetch-with-cli = true

@@ -6,16 +6,25 @@
 #![cfg_attr(not(test), no_std)]
 
 pub mod analog;
+#[cfg(feature = "firmware")]
+pub mod bor;
+pub mod can;
 pub mod config;
 pub mod datalog;
 pub mod decoder;
 pub mod defaults;
 pub mod engine;
 pub mod engines;
+#[cfg(feature = "firmware")]
+pub mod heap;
 pub mod pins;
 pub mod rbw;
+pub mod replay;
+pub mod scheduler;
+pub mod safety;
 pub mod sensors;
 pub mod timing;
+pub mod tle8888;
 
 pub use config::EngineConfig;
 pub use defaults::{FIRMWARE_ID, TARGET_MCU};

@@ -77,7 +77,7 @@ pub mod wiring {
 
     pub mod sensors {
         use super::{CLT_NTC, IAT_NTC};
-        use crate::analog::{ADC_VREF, VBATT_SCALING};
+        use crate::analog::VBATT_SCALING;
         use crate::sensors::{AdcChannel, NtcConfig};
 
         pub const CLT: AdcChannel = AdcChannel::CoolantTemp;

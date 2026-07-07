@@ -1,27 +1,17 @@
 #![no_std]
 #![no_main]
 
-use defmt::{error, info};
+use defmt::{error, info, warn};
 use embassy_executor::Spawner;
 use embassy_time::Timer;
 use sigma_racer_efi::{
-    FIRMWARE_ID, TARGET_MCU, active_profile, defaults::wiring, pins::BoardPins,
-    pins::embassy::MreBoard,
+    FIRMWARE_ID, TARGET_MCU, active_profile, bor, defaults::wiring, pins::BoardPins,
+    pins::embassy::{MreBoard, init_or_log},
 };
 use {defmt_rtt as _, panic_probe as _};
 
 mod tasks;
 
-/// 216 MHz sysclk from the internal 16 MHz HSI.
-///
-/// HSI is deliberate for bring-up: it works on any board regardless of the
-/// fitted crystal. Once the physical MRE's HSE crystal is verified, switch
-/// `pll_src` to HSE for CAN-grade clock accuracy (HSI is ±1% — fine for
-/// ADC/EXTI logging, marginal for high-rate CAN).
-///
-/// HSI 16 MHz /8 → 2 MHz ×216 → 432 MHz VCO; /2 → 216 MHz sysclk (overdrive
-/// is enabled by the RCC driver); /9 → 48 MHz for USB/SDMMC. APB1 54 MHz,
-/// APB2 108 MHz (both at their maximums; ADC runs from APB2/4 = 27 MHz).
 fn rcc_config() -> embassy_stm32::Config {
     use embassy_stm32::rcc::*;
 
@@ -47,22 +37,23 @@ async fn main(spawner: Spawner) {
     let pins = BoardPins::mre_f7();
     let profile = active_profile();
 
-    // Initialise the MCU first so all outputs are driven to a known-safe Low
-    // state (injectors/coils off) before we make any go/no-go decision.
+    sigma_racer_efi::heap::init();
     let p = embassy_stm32::init(rcc_config());
-    let mut board = MreBoard::init(pins, p);
 
-    // Refuse to run with an invalid profile. Rather than panicking (which
-    // would also halt with outputs safe, but silently), enter an explicit
-    // fault state: outputs stay off and the critical LED fast-blinks.
+    bor::ensure();
+
+    let (mut board, mut tle, iwdg) = MreBoard::init(pins, p);
+
+    tasks::safety::start_iwdg(iwdg);
+
     if let Err(_err) = wiring::validate_profile(&profile) {
         error!("invalid engine profile — entering safe state, engine control disabled");
-        loop {
-            board.led_critical.set_high();
-            Timer::after_millis(120).await;
-            board.led_critical.set_low();
-            Timer::after_millis(120).await;
-        }
+        tasks::safety::safe_state_loop(&mut board.safe, board.led_critical).await;
+    }
+
+    if !init_or_log(&mut tle) {
+        error!("TLE8888 init failed — entering safe state");
+        tasks::safety::safe_state_loop(&mut board.safe, board.led_critical).await;
     }
 
     info!("{} on {} — engine: {}", FIRMWARE_ID, TARGET_MCU, profile.id);
@@ -71,13 +62,10 @@ async fn main(spawner: Spawner) {
         profile.engine.cylinders, profile.engine.displacement_cc, profile.cycle_degrees
     );
     info!("stage 1: characterization data logger (DL,S sensor / DL,T trigger records)");
-    defmt::warn!(
+    warn!(
         "profile trigger geometry + rev limits are UNVERIFIED placeholders — logger stage only"
     );
 
-    // Stage-1 data logger: analog sweep + crank/cam edge capture.
-    // Failing to allocate any of these tasks is a broken build, not a
-    // runtime condition to limp through — log loudly and stay safe.
     let logger_tokens = (
         tasks::sensors::sample(board.adc, board.sensors),
         tasks::trigger::crank_capture(board.crank),
@@ -93,17 +81,15 @@ async fn main(spawner: Spawner) {
         }
         _ => {
             error!("failed to spawn data-logger tasks — entering safe state");
-            loop {
-                board.led_critical.set_high();
-                Timer::after_millis(120).await;
-                board.led_critical.set_low();
-                Timer::after_millis(120).await;
-            }
+            tasks::safety::safe_state_loop(&mut board.safe, board.led_critical).await;
         }
     }
 
-    // Heartbeat is non-critical; log and continue if the executor is out of
-    // task slots rather than aborting the whole firmware.
+    if tasks::safety::spawn_supervisor(&spawner, tle).is_err() {
+        error!("failed to spawn safety supervisor — entering safe state");
+        tasks::safety::safe_state_loop(&mut board.safe, board.led_critical).await;
+    }
+
     match heartbeat(board.led_comms) {
         Ok(token) => spawner.spawn(token),
         Err(_) => error!("failed to spawn heartbeat task"),

@@ -26,11 +26,16 @@ pub struct BoardPins {
     pub tle8888_spi_miso: GpioPin,
     pub tle8888_spi_sck: GpioPin,
     pub tle8888_spi_cs: GpioPin,
+    /// Active-high enable for TLE8888 injector outputs (PD11 + pulldown).
+    pub tle8888_inj_en: GpioPin,
+    /// Active-high enable for TLE8888 ignition outputs (PD10 + pulldown).
+    pub tle8888_ign_en: GpioPin,
 
     // --- Electronic throttle (TLE9201) ---
     pub etb_pwm: GpioPin,
     pub etb_dir_a: GpioPin,
-    pub etb_dir_b: GpioPin,
+    /// TLE9201 DIS — low disables the H-bridge (rusEFI `setupTLE9201` disable pin).
+    pub etb_disable: GpioPin,
 
     // --- CAN ---
     pub can_tx: GpioPin,
@@ -97,10 +102,12 @@ impl BoardPins {
             tle8888_spi_miso: GpioPin::new(GpioPort::B, 4),
             tle8888_spi_sck: GpioPin::new(GpioPort::B, 3),
             tle8888_spi_cs: GpioPin::new(GpioPort::D, 5),
+            tle8888_inj_en: GpioPin::new(GpioPort::D, 11),
+            tle8888_ign_en: GpioPin::new(GpioPort::D, 10),
 
             etb_pwm: GpioPin::new(GpioPort::C, 7),
             etb_dir_a: GpioPin::new(GpioPort::A, 8),
-            etb_dir_b: GpioPin::new(GpioPort::C, 8),
+            etb_disable: GpioPin::new(GpioPort::C, 8),
 
             can_tx: GpioPin::new(GpioPort::B, 6),
             can_rx: GpioPin::new(GpioPort::B, 12),
@@ -165,5 +172,18 @@ mod tests {
         let pins = BoardPins::mre_f7();
         assert_eq!(pins.ignition[0], GpioPin::new(GpioPort::D, 4));
         assert_eq!(pins.ignition[3], GpioPin::new(GpioPort::D, 1));
+    }
+
+    #[test]
+    fn tle8888_enables_match_mre_wiring() {
+        let pins = BoardPins::mre_f7();
+        assert_eq!(pins.tle8888_inj_en, GpioPin::new(GpioPort::D, 11));
+        assert_eq!(pins.tle8888_ign_en, GpioPin::new(GpioPort::D, 10));
+    }
+
+    #[test]
+    fn etb_disable_is_tle9201_dis_pin() {
+        let pins = BoardPins::mre_f7();
+        assert_eq!(pins.etb_disable, GpioPin::new(GpioPort::C, 8));
     }
 }
