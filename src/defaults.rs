@@ -8,7 +8,6 @@ pub const TARGET_MCU: &str = "STM32F767VI";
 
 /// Map logical cylinder index to microRusEFI outputs.
 pub mod wiring {
-    use crate::analog::{CLT_NTC, IAT_NTC};
     use crate::config::MAX_CYLINDERS;
     use crate::engines::profile::EngineProfile;
     use crate::pins::{BoardPins, GpioPin, TleOutput};
@@ -72,34 +71,6 @@ pub mod wiring {
     impl From<crate::engines::profile::ProfileError> for WiringError {
         fn from(err: crate::engines::profile::ProfileError) -> Self {
             Self::Profile(err)
-        }
-    }
-
-    pub mod sensors {
-        use super::{CLT_NTC, IAT_NTC};
-        use crate::analog::VBATT_SCALING;
-        use crate::sensors::{AdcChannel, NtcConfig};
-
-        pub const CLT: AdcChannel = AdcChannel::CoolantTemp;
-        pub const IAT: AdcChannel = AdcChannel::IntakeTemp;
-        pub const MAP: AdcChannel = AdcChannel::Map;
-        pub const TPS: AdcChannel = AdcChannel::Tps;
-        pub const BATTERY: AdcChannel = AdcChannel::Battery;
-
-        pub const CLT_THERMISTOR: NtcConfig = CLT_NTC;
-        pub const IAT_THERMISTOR: NtcConfig = IAT_NTC;
-        pub const BATTERY_SCALING: crate::sensors::AnalogScaling = VBATT_SCALING;
-
-        pub fn battery_volts_from_adc(adc_volts: f32) -> f32 {
-            BATTERY_SCALING.raw_to_volts(adc_volts)
-        }
-
-        pub fn clt_celsius_from_adc(adc_volts: f32) -> f32 {
-            CLT_THERMISTOR.volts_to_celsius(adc_volts)
-        }
-
-        pub fn iat_celsius_from_adc(adc_volts: f32) -> f32 {
-            IAT_THERMISTOR.volts_to_celsius(adc_volts)
         }
     }
 }

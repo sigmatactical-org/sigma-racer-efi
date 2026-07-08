@@ -314,7 +314,7 @@ mod tests {
                     tooth_us
                 };
                 crank.push(t_us);
-                if tooth == 2 && rev % 2 == 0 {
+                if tooth == 2 && rev.is_multiple_of(2) {
                     cam.push(t_us + tooth_us / 2);
                 }
             }

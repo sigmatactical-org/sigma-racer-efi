@@ -127,37 +127,29 @@ impl BoardPins {
     }
 }
 
-/// TLE8888-driven outputs (injectors, GP outs, low sides) by connector name.
+/// TLE8888-driven outputs by connector role (default rusEFI assignment).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TleOutput {
+    /// Injector 1 — connector pin 37.
     Injector1,
+    /// Injector 2 — connector pin 38.
     Injector2,
+    /// Injector 3 — connector pin 41.
     Injector3,
+    /// Injector 4 — connector pin 42.
     Injector4,
+    /// Fuel pump — connector pin 35.
     GpOut1,
+    /// Radiator fan — connector pin 34.
     GpOut2,
+    /// General purpose — connector pin 33.
     GpOut3,
+    /// General purpose — connector pin 43.
     GpOut4,
+    /// VVT / high-current solenoid — connector pin 7.
     LowSide1,
+    /// Idle IAC solenoid — connector pin 3.
     LowSide2,
-}
-
-/// Default rusEFI output assignment on microRusEFI.
-impl TleOutput {
-    pub const fn default_function(self) -> &'static str {
-        match self {
-            Self::Injector1 => "Injector 1 (pin 37)",
-            Self::Injector2 => "Injector 2 (pin 38)",
-            Self::Injector3 => "Injector 3 (pin 41)",
-            Self::Injector4 => "Injector 4 (pin 42)",
-            Self::GpOut1 => "Fuel pump (pin 35)",
-            Self::GpOut2 => "Radiator fan (pin 34)",
-            Self::GpOut3 => "General purpose (pin 33)",
-            Self::GpOut4 => "General purpose (pin 43)",
-            Self::LowSide1 => "VVT / high-current solenoid (pin 7)",
-            Self::LowSide2 => "Idle IAC solenoid (pin 3)",
-        }
-    }
 }
 
 #[cfg(feature = "firmware")]

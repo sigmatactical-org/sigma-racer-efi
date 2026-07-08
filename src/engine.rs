@@ -1,8 +1,12 @@
 //! Runtime engine state and fuel/ignition scheduling hooks.
 
+use crate::analog::{CLT_NTC, IAT_NTC, VBATT_SCALING};
 use crate::config::{EngineConfig, IgnitionMode, InjectionMode};
-use crate::defaults::wiring::sensors;
 use crate::engines::profile::EngineProfile;
+use crate::fueling::{PLACEHOLDER_INJECTOR, PLACEHOLDER_VE, SpeedDensityInputs, base_pulse_ms};
+
+/// Closed-loop target for the base pulse; lambda trim owns the rest.
+const STOICH_AFR: f32 = 14.7;
 
 /// RPM below which the engine is treated as cranking (no sync or low speed).
 const CRANKING_RPM_THRESHOLD: f32 = 100.0;
@@ -45,15 +49,15 @@ impl EngineState {
     }
 
     pub fn update_vbatt_from_adc(&mut self, adc_volts: f32) {
-        self.vbatt = sensors::battery_volts_from_adc(adc_volts);
+        self.vbatt = VBATT_SCALING.raw_to_volts(adc_volts);
     }
 
     pub fn update_clt_from_adc(&mut self, adc_volts: f32) {
-        self.clt_c = sensors::clt_celsius_from_adc(adc_volts);
+        self.clt_c = CLT_NTC.volts_to_celsius(adc_volts);
     }
 
     pub fn update_iat_from_adc(&mut self, adc_volts: f32) {
-        self.iat_c = sensors::iat_celsius_from_adc(adc_volts);
+        self.iat_c = IAT_NTC.volts_to_celsius(adc_volts);
     }
 
     /// Fuel events scheduled per engine cycle for the configured injection mode.
@@ -75,10 +79,10 @@ impl EngineState {
         coils.saturating_mul(profile.spark_plugs_per_cylinder)
     }
 
-    /// Placeholder speed-density fuel pulse width.
+    /// Base fuel pulse width via the speed-density pipeline (`fueling`).
     ///
-    /// Real implementation will use VE tables, injector flow, and wall wetting
-    /// modeled after rusEFI's fuel math, reimplemented here.
+    /// One fuel math in the crate: VE table × ideal gas × injector model —
+    /// calibrations are ⚠ [MEASURE] placeholders until the dyno (M6).
     pub fn compute_base_injection_ms(&mut self, config: &EngineConfig) -> f32 {
         if self.is_cranking() {
             self.base_injection_ms = match config.cranking_injection_mode {
@@ -90,14 +94,22 @@ impl EngineState {
             return self.base_injection_ms;
         }
 
-        let load = (self.map_kpa / 100.0).clamp(0.2, 1.5);
-        let rpm_factor = (3_000.0 / self.trigger.rpm.max(500.0)).clamp(0.5, 3.0);
-        let displacement_factor = config.displacement_cc as f32 / 1_600.0;
-        let base = 2.5 * load * rpm_factor * displacement_factor;
+        let base = base_pulse_ms(
+            &PLACEHOLDER_VE,
+            &PLACEHOLDER_INJECTOR,
+            &SpeedDensityInputs {
+                rpm: self.trigger.rpm,
+                map_kpa: self.map_kpa,
+                iat_c: self.iat_c,
+                displacement_per_cyl_cc: config.displacement_cc as f32
+                    / config.cylinders.max(1) as f32,
+                afr_target: STOICH_AFR,
+                vbatt: self.vbatt,
+            },
+        );
 
         self.base_injection_ms = match config.injection_mode {
-            InjectionMode::Simultaneous => base,
-            InjectionMode::Sequential => base,
+            InjectionMode::Simultaneous | InjectionMode::Sequential => base,
             // Batch fires fewer, longer events per cycle.
             InjectionMode::Batch => base * 2.0,
         };

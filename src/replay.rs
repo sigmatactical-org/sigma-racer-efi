@@ -135,7 +135,7 @@ impl Iterator for Steps {
             tooth_us
         };
 
-        let fire_cam = self.rev % 2 == 0 && self.tooth == self.plan.cam_after_tooth;
+        let fire_cam = self.rev.is_multiple_of(2) && self.tooth == self.plan.cam_after_tooth;
 
         // Advance to the next tooth/rev.
         self.tooth += 1;

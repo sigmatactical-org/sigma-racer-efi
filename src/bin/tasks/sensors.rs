@@ -48,7 +48,7 @@ pub async fn sample(mut adc: Adc<'static, ADC1>, mut channels: SensorChannels) {
         sender.send(frame);
 
         sweeps = sweeps.wrapping_add(1);
-        if sweeps % LOG_EVERY == 0 {
+        if sweeps.is_multiple_of(LOG_EVERY) {
             defmt::info!(
                 "DL,S,{=u64},{=f32},{=f32},{=f32},{=f32},{=f32},{=f32}",
                 frame.t_us,

@@ -138,11 +138,10 @@ impl EdgeIntervals {
     }
 }
 
-pub use crate::timing::rpm_from_period_us;
-
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::timing::rpm_from_period_us;
 
     #[test]
     fn counts_scale_to_pin_volts() {

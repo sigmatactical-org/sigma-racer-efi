@@ -17,12 +17,12 @@ pub const CMD_READ: u16 = 0;
 
 /// Build a 16-bit write command: register address + 8-bit payload.
 pub const fn cmd_w(reg: u8, data: u8) -> u16 {
-    (CMD_WRITE | ((reg as u16 & 0x7f) << 1) | ((data as u16) << 8)) as u16
+    CMD_WRITE | ((reg as u16 & 0x7f) << 1) | ((data as u16) << 8)
 }
 
 /// Build a 16-bit read command.
 pub const fn cmd_r(reg: u8) -> u16 {
-    (CMD_READ | ((reg as u16 & 0x7f) << 1)) as u16
+    CMD_READ | ((reg as u16 & 0x7f) << 1)
 }
 
 pub const CMD_SR: u16 = cmd_w(0x1a, 0x03);

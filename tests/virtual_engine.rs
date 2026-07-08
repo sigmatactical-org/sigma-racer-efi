@@ -18,7 +18,7 @@
 //! When the boards arrive, the only untested layer left is electronics.
 
 use sigma_racer_efi::decoder::{Decoder, SyncState};
-use sigma_racer_efi::fueling::{PLACEHOLDER_DWELL, PLACEHOLDER_INJECTOR, PLACEHOLDER_VE, base_pulse_ms};
+use sigma_racer_efi::fueling::{PLACEHOLDER_INJECTOR, PLACEHOLDER_VE, SpeedDensityInputs, base_pulse_ms};
 use sigma_racer_efi::rbw::{RbwCommand, RbwConfig, RbwInputs, RbwMonitor, RbwState};
 use sigma_racer_efi::replay::{ReplayPlan, Step};
 use sigma_racer_efi::scheduler::{ArmedBuf, EventId, Scheduler, deg_per_us_from_rpm};
@@ -163,12 +163,14 @@ fn run(plans: &[ReplayPlan], fault_after_us: Option<u64>) -> VirtualRun {
                             pulses.push(base_pulse_ms(
                                 &PLACEHOLDER_VE,
                                 &PLACEHOLDER_INJECTOR,
-                                out.rpm,
-                                45.0, // steady part-throttle MAP, kPa
-                                25.0,
-                                CYL_CC,
-                                14.7,
-                                13.5,
+                                &SpeedDensityInputs {
+                                    rpm: out.rpm,
+                                    map_kpa: 45.0, // steady part throttle
+                                    iat_c: 25.0,
+                                    displacement_per_cyl_cc: CYL_CC,
+                                    afr_target: 14.7,
+                                    vbatt: 13.5,
+                                },
                             ));
                         }
                     }

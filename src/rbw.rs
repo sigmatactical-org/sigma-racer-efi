@@ -503,12 +503,14 @@ mod tests {
     #[test]
     fn mirrored_second_sensor_normalizes_transparently() {
         // APP B wired as a mirror (5 V − A): inverted cal, same percent.
-        let mut cfg = RbwConfig::default();
-        cfg.app_b = SensorCal {
-            min_valid_v: 0.25,
-            max_valid_v: 4.75,
-            v_at_0: 4.5,
-            v_at_100: 0.5,
+        let cfg = RbwConfig {
+            app_b: SensorCal {
+                min_valid_v: 0.25,
+                max_valid_v: 4.75,
+                v_at_0: 4.5,
+                v_at_100: 0.5,
+            },
+            ..RbwConfig::default()
         };
         let mut m = RbwMonitor::new(cfg);
         let inputs = RbwInputs {

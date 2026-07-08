@@ -25,18 +25,11 @@ pub enum IgnitionMode {
     WastedSpark,
 }
 
-/// Common firing-sequence presets (0-based cylinder indices).
+/// Firing-sequence presets (0-based cylinder indices). Add presets with
+/// engines, not in advance.
 pub mod firing {
-    /// Inline-4: 1-3-4-2 (e.g. Toyota, BMW, Miata).
-    pub const INLINE_4_1342: &[u8] = &[0, 2, 3, 1];
-    /// Inline-4: 1-3-2-4.
-    pub const INLINE_4_1324: &[u8] = &[0, 2, 1, 3];
-    /// Inline-4: 1-2-3-4.
-    pub const INLINE_4_1234: &[u8] = &[0, 1, 2, 3];
-    /// Inline-3: 1-2-3.
+    /// Inline-3: 1-2-3 (Yamaha CP3).
     pub const INLINE_3_123: &[u8] = &[0, 1, 2];
-    /// V-twin: front then rear.
-    pub const V_TWIN_FRONT_REAR: &[u8] = &[0, 1];
 }
 
 /// Top-level tunable engine configuration.
@@ -105,10 +98,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn firing_preset_length_matches_four_cylinder_count() {
+    fn firing_sequence_length_matches_cylinder_count() {
         let config = EngineConfig {
             cylinders: 4,
-            firing_sequence: firing::INLINE_4_1342,
+            firing_sequence: &[0, 2, 3, 1],
             injection_mode: InjectionMode::Sequential,
             ignition_mode: IgnitionMode::IndividualCoils,
             cranking_injection_mode: InjectionMode::Simultaneous,
@@ -122,7 +115,7 @@ mod tests {
     fn rejects_mismatched_firing_sequence() {
         let config = EngineConfig {
             cylinders: 3,
-            firing_sequence: firing::INLINE_4_1342,
+            firing_sequence: &[0, 2, 3, 1],
             injection_mode: InjectionMode::Sequential,
             ignition_mode: IgnitionMode::IndividualCoils,
             cranking_injection_mode: InjectionMode::Simultaneous,

@@ -113,20 +113,22 @@ pub const PLACEHOLDER_VE: Table<4, 4> = Table {
     ],
 };
 
+/// Operating point for one base-pulse computation.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct SpeedDensityInputs {
+    pub rpm: f32,
+    pub map_kpa: f32,
+    pub iat_c: f32,
+    pub displacement_per_cyl_cc: f32,
+    pub afr_target: f32,
+    pub vbatt: f32,
+}
+
 /// One end-to-end base pulse computation: VE lookup → air → fuel → pulse.
-pub fn base_pulse_ms(
-    ve: &Table<4, 4>,
-    injector: &InjectorModel,
-    rpm: f32,
-    map_kpa: f32,
-    iat_c: f32,
-    displacement_per_cyl_cc: f32,
-    afr_target: f32,
-    vbatt: f32,
-) -> f32 {
-    let ve_pct = ve.lookup(rpm, map_kpa);
-    let air = cylinder_air_mass_mg(displacement_per_cyl_cc, ve_pct, map_kpa, iat_c);
-    injector.pulse_width_ms(fuel_mass_mg(air, afr_target), vbatt)
+pub fn base_pulse_ms(ve: &Table<4, 4>, injector: &InjectorModel, sd: &SpeedDensityInputs) -> f32 {
+    let ve_pct = ve.lookup(sd.rpm, sd.map_kpa);
+    let air = cylinder_air_mass_mg(sd.displacement_per_cyl_cc, ve_pct, sd.map_kpa, sd.iat_c);
+    injector.pulse_width_ms(fuel_mass_mg(air, sd.afr_target), sd.vbatt)
 }
 
 #[cfg(test)]
@@ -191,22 +193,26 @@ mod tests {
         let idle = base_pulse_ms(
             &PLACEHOLDER_VE,
             &PLACEHOLDER_INJECTOR,
-            1_200.0,
-            35.0,
-            30.0,
-            CYL_CC,
-            14.7,
-            13.5,
+            &SpeedDensityInputs {
+                rpm: 1_200.0,
+                map_kpa: 35.0,
+                iat_c: 30.0,
+                displacement_per_cyl_cc: CYL_CC,
+                afr_target: 14.7,
+                vbatt: 13.5,
+            },
         );
         let wot = base_pulse_ms(
             &PLACEHOLDER_VE,
             &PLACEHOLDER_INJECTOR,
-            7_000.0,
-            100.0,
-            30.0,
-            CYL_CC,
-            13.0,
-            13.5,
+            &SpeedDensityInputs {
+                rpm: 7_000.0,
+                map_kpa: 100.0,
+                iat_c: 30.0,
+                displacement_per_cyl_cc: CYL_CC,
+                afr_target: 13.0,
+                vbatt: 13.5,
+            },
         );
         assert!(idle > 0.5 && idle < wot, "idle {idle} ms, wot {wot} ms");
         assert!(wot < 12.0, "wot {wot} ms");
