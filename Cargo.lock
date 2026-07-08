@@ -1017,7 +1017,6 @@ dependencies = [
 [[package]]
 name = "sigma-racer-wingman-m7-can"
 version = "0.1.0"
-source = "git+ssh://git@github.com/sigmatactical-org/sigma-instrumentation.git?rev=ecf08a60f483d36cf74f68be94d93fa6ed5adfe9#ecf08a60f483d36cf74f68be94d93fa6ed5adfe9"
 dependencies = [
  "dbc-rs",
 ]
