@@ -1,39 +1,39 @@
-//! Engine control types and microRusEFI board support for Sigma Racer EFI.
+//! Sigma Racer EFI — engine-control firmware for the microRusEFI board.
 //!
-//! Core logic is `#![no_std]` and engine-agnostic. Select an engine at
-//! compile time via Cargo features (`engine-yamaha-cp3`).
+//! The crate is organized by **domain**; each domain is a folder, and each
+//! primary object lives in a file named after it. `no_std` and
+//! engine-agnostic at the core; select an engine at compile time with a
+//! Cargo feature (`engine-yamaha-cp3`).
+//!
+//! | Domain | What it owns |
+//! |---|---|
+//! | [`engine`] | configuration, profiles, live runtime state |
+//! | [`trigger`] | wheel geometry, sync decoder, edge statistics |
+//! | [`fuel`] | interpolation tables, injector model, speed-density |
+//! | [`ignition`] | coil dwell control |
+//! | [`throttle`] | ride-by-wire independent safety monitor |
+//! | [`scheduler`] | angle-domain predict-and-arm |
+//! | [`sensor`] | ADC channels, scaling, MRE front-end, sweep frame |
+//! | [`board`] | pin map, outputs, wiring, TLE8888, Embassy split |
+//! | [`comms`] | ECU side of the M7 CAN contract |
+//! | [`replay`] | crank/cam signal generator (bench Phase 3) |
 
 #![cfg_attr(not(test), no_std)]
 
-pub mod analog;
-#[cfg(feature = "firmware")]
-pub mod bor;
-pub mod can;
-pub mod config;
-pub mod datalog;
-pub mod decoder;
-pub mod defaults;
+pub mod board;
+pub mod comms;
 pub mod engine;
-pub mod engines;
-pub mod fueling;
-#[cfg(feature = "firmware")]
-pub mod heap;
-pub mod pins;
-pub mod rbw;
+pub mod fuel;
+pub mod ignition;
 pub mod replay;
 pub mod scheduler;
-pub mod safety;
-pub mod sensors;
-pub mod tables;
-pub mod timing;
-pub mod tle8888;
+pub mod sensor;
+pub mod throttle;
+pub mod trigger;
 
-pub use config::EngineConfig;
-pub use defaults::{FIRMWARE_ID, TARGET_MCU};
-pub use engine::EngineState;
-pub use engines::EngineProfile;
-pub use engines::profile::CYCLE_DEGREES_FOUR_STROKE;
+// Curated top-level re-exports for the firmware entry point and consumers.
+pub use board::{BoardPins, FIRMWARE_ID, TARGET_MCU, TleOutput};
+pub use engine::{CYCLE_DEGREES_FOUR_STROKE, EngineConfig, EngineProfile, EngineState};
+
 #[cfg(feature = "engine-yamaha-cp3")]
-pub use engines::active_profile;
-pub use pins::BoardPins;
-pub use pins::TleOutput;
+pub use engine::active_profile;

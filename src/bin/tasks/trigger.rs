@@ -21,7 +21,7 @@ use embassy_stm32::mode::Async;
 use embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex;
 use embassy_sync::channel::Channel;
 use embassy_time::Instant;
-use sigma_racer_efi::datalog::{EdgeEvent, EdgeIntervals, TriggerLine};
+use sigma_racer_efi::trigger::{EdgeEvent, EdgeIntervals, TriggerLine};
 
 /// Captured edges awaiting the logger. Sized for a burst of a full crank
 /// revolution at cranking speed.

@@ -24,7 +24,7 @@ use embassy_executor::Spawner;
 use embassy_stm32::gpio::{Level, Output, Speed};
 use embassy_time::Timer;
 use sigma_racer_efi::replay::{ReplayPlan, Step};
-use sigma_racer_efi::timing::TriggerWheel;
+use sigma_racer_efi::trigger::TriggerWheel;
 use {defmt_rtt as _, panic_probe as _};
 
 /// ⚠ [MEASURE] — placeholder wheel until mule Phase 1 reads the real CP3
@@ -65,7 +65,7 @@ async fn pulse(pin: &mut Output<'static>, window_us: u32) {
 
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {
-    sigma_racer_efi::heap::init();
+    sigma_racer_efi::board::heap::init();
     let p = embassy_stm32::init(rcc_config());
 
     let mut crank = Output::new(p.PD4, Level::Low, Speed::High);

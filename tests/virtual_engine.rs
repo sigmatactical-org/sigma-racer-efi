@@ -17,12 +17,12 @@
 //!
 //! When the boards arrive, the only untested layer left is electronics.
 
-use sigma_racer_efi::decoder::{Decoder, SyncState};
-use sigma_racer_efi::fueling::{PLACEHOLDER_INJECTOR, PLACEHOLDER_VE, SpeedDensityInputs, base_pulse_ms};
-use sigma_racer_efi::rbw::{RbwCommand, RbwConfig, RbwInputs, RbwMonitor, RbwState};
+use sigma_racer_efi::trigger::{Decoder, SyncState};
+use sigma_racer_efi::fuel::{PLACEHOLDER_INJECTOR, PLACEHOLDER_VE, SpeedDensityInputs, base_pulse_ms};
+use sigma_racer_efi::throttle::{RbwCommand, RbwConfig, RbwInputs, RbwMonitor, RbwState};
 use sigma_racer_efi::replay::{ReplayPlan, Step};
 use sigma_racer_efi::scheduler::{ArmedBuf, EventId, Scheduler, deg_per_us_from_rpm};
-use sigma_racer_efi::timing::TriggerWheel;
+use sigma_racer_efi::trigger::TriggerWheel;
 
 const WHEEL: TriggerWheel = TriggerWheel {
     teeth: 12,

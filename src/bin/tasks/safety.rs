@@ -5,8 +5,9 @@ use embassy_executor::Spawner;
 use embassy_stm32::Peri;
 use embassy_stm32::wdg::IndependentWatchdog;
 use embassy_time::{Duration, Timer};
-use sigma_racer_efi::pins::embassy::{SafeOutputs, Tle8888Bus};
-use sigma_racer_efi::tle8888::{IWDG_TIMEOUT_US, WWD_PERIOD_MS};
+use sigma_racer_efi::board::mre_board::SafeOutputs;
+use sigma_racer_efi::board::tle8888::Tle8888Bus;
+use sigma_racer_efi::board::tle8888::{IWDG_TIMEOUT_US, WWD_PERIOD_MS};
 
 /// Kick the independent watchdog from any context.
 pub fn kick_iwdg() {

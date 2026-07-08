@@ -4,10 +4,10 @@
 use defmt::{error, info, warn};
 use embassy_executor::Spawner;
 use embassy_time::Timer;
-use sigma_racer_efi::{
-    FIRMWARE_ID, TARGET_MCU, active_profile, bor, defaults::wiring, pins::BoardPins,
-    pins::embassy::{MreBoard, init_or_log},
-};
+use sigma_racer_efi::board::mre_board::MreBoard;
+use sigma_racer_efi::board::tle8888::init_or_log;
+use sigma_racer_efi::board::{BoardPins, bor, wiring};
+use sigma_racer_efi::{FIRMWARE_ID, TARGET_MCU, active_profile};
 use {defmt_rtt as _, panic_probe as _};
 
 mod tasks;
@@ -37,7 +37,7 @@ async fn main(spawner: Spawner) {
     let pins = BoardPins::mre_f7();
     let profile = active_profile();
 
-    sigma_racer_efi::heap::init();
+    sigma_racer_efi::board::heap::init();
     let p = embassy_stm32::init(rcc_config());
 
     bor::ensure();
