@@ -1009,13 +1009,13 @@ dependencies = [
  "embedded-alloc",
  "libm",
  "panic-probe",
- "sigma-racer-wingman-m7-can",
+ "sigma-racer-sidearm",
  "static_cell",
  "stm32-metapac",
 ]
 
 [[package]]
-name = "sigma-racer-wingman-m7-can"
+name = "sigma-racer-sidearm"
 version = "0.1.0"
 dependencies = [
  "dbc-rs",

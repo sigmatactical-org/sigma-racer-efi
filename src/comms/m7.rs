@@ -2,7 +2,7 @@
 
 use crate::comms::EcuSnapshot;
 use crate::engine::EngineProfile;
-use sigma_racer_wingman_m7_can::M7Signals;
+use sigma_racer_sidearm::M7Signals;
 
 /// Map the ECU's contribution onto the shared contract type.
 ///
@@ -37,17 +37,17 @@ fn clamp(value: f32, lo: f32, hi: f32) -> f32 {
 /// Transmit schedule, Hz per message ID — fast for rider-critical, slow for
 /// bookkeeping. The broadcast task divides its base tick by these.
 pub const TX_RATE_HZ: [(u32, u16); 5] = [
-    (sigma_racer_wingman_m7_can::ENGINE_STATUS, 50),
-    (sigma_racer_wingman_m7_can::THROTTLE_GEAR, 50),
-    (sigma_racer_wingman_m7_can::WHEEL_SPEED, 20),
-    (sigma_racer_wingman_m7_can::CHASSIS_ELECTRICAL, 10),
-    (sigma_racer_wingman_m7_can::TRIP_ODOMETER, 1),
+    (sigma_racer_sidearm::ENGINE_STATUS, 50),
+    (sigma_racer_sidearm::THROTTLE_GEAR, 50),
+    (sigma_racer_sidearm::WHEEL_SPEED, 20),
+    (sigma_racer_sidearm::CHASSIS_ELECTRICAL, 10),
+    (sigma_racer_sidearm::TRIP_ODOMETER, 1),
 ];
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use sigma_racer_wingman_m7_can::{MESSAGE_IDS, decode_into, encode_frames, parse};
+    use sigma_racer_sidearm::{MESSAGE_IDS, decode_into, encode_frames, parse};
 
     fn profile() -> EngineProfile {
         crate::engine::yamaha_cp3::profile()

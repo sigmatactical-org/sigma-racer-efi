@@ -1,7 +1,7 @@
 //! Comms domain: the ECU side of the M7 safety-bus CAN contract.
 //!
 //! The dictionary (message IDs, DBC, codec) lives in the shared
-//! `sigma-racer-wingman-m7-can` crate; this domain owns only what the ECU
+//! `sigma-racer-sidearm` crate; this domain owns only what the ECU
 //! contributes — the [`EcuSnapshot`] and its encoding.
 //!
 //! Bus rules (`efi.md` §11): classic CAN, ≤8-byte frames (the MRE's F7 has
@@ -13,4 +13,4 @@ pub mod snapshot;
 pub use m7::{TX_RATE_HZ, m7_signals};
 pub use snapshot::EcuSnapshot;
 
-pub use sigma_racer_wingman_m7_can::{M7Signals, MESSAGE_IDS, PerformanceMode, parse};
+pub use sigma_racer_sidearm::{M7Signals, MESSAGE_IDS, PerformanceMode, parse};

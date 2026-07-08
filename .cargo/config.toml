@@ -2,7 +2,7 @@
 runner = "probe-rs run --chip STM32F767VI"
 
 [patch."ssh://git@github.com/sigmatactical-org/sigma-racer-sidearm.git"]
-sigma-racer-wingman-m7-can = { path = "../sigma-racer-sidearm/sigma-racer-wingman-m7-can" }
+sigma-racer-sidearm = { path = "../sigma-racer-sidearm" }
 
 [env]
 DEFMT_LOG = "info"
