@@ -113,3 +113,9 @@ Priority order for porting rusEFI subsystems into Rust:
 - [rusEFI microRusEFI wiring wiki](https://wiki.rusefi.com/Hardware-microRusEfi-wiring)
 - [Embassy STM32F767 docs](https://docs.embassy.dev/embassy-stm32/git/stm32f767vi/index.html)
 - [Yamaha CP3 engine overview](https://motofomo.com/yamaha-cp3-history-models/)
+
+## Brand & artwork
+
+© Sigma Tactical Group. **All rights reserved.**
+
+The Sigma Tactical Group name, logos, marks, artwork, and visual identity are **proprietary**. They are not covered by this repository's source-code license. See [BRANDING.md](BRANDING.md).
