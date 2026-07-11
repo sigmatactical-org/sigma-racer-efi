@@ -10,8 +10,18 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: embedded/sigma-racer-efi
     steps:
       - uses: actions/checkout@v5
+        with:
+          path: embedded/sigma-racer-efi
+
+      - uses: actions/checkout@v5
+        with:
+          repository: sigmatactical-org/sigma-racer-sidearm
+          path: embedded/sigma-racer-sidearm
 
       - uses: dtolnay/rust-toolchain@1.90.0
         with:
@@ -19,6 +29,8 @@ jobs:
           targets: thumbv7em-none-eabihf
 
       - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: embedded/sigma-racer-efi
 
       - name: Host tests
         run: cargo test
