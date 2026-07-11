@@ -1,5 +1,7 @@
 # Sigma Racer EFI
 
+[![CI](https://github.com/sigmatactical-org/sigma-racer-efi/actions/workflows/ci.yml/badge.svg)](https://github.com/sigmatactical-org/sigma-racer-efi/actions/workflows/ci.yml)
+
 Rust engine control firmware for the [microRusEFI](https://www.shop.rusefi.com/shop/p/microrusefi-assembled-ecu-development-module) ECU, built on [Embassy](https://embassy.dev/) and conceptually ported from [rusEFI](https://github.com/rusefi/rusefi).
 
 Licensed under **MIT OR Apache-2.0** (see `LICENSE-MIT` and `LICENSE-APACHE`). rusEFI itself is GPL; this project reimplements algorithms and maps hardware from public board documentation — it does not incorporate rusEFI source code.
