@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Convert sigma-racer-efi DL capture logs (+ optional candump) to ASAM MDF4"
 edition = "2024"
 license = "MIT OR Apache-2.0"
+homepage = "https://sigmatactical.org"
 publish = false
 
 [dependencies]
