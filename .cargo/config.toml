@@ -1,8 +1,11 @@
 [target.thumbv7em-none-eabihf]
 runner = "probe-rs run --chip STM32F767VI"
 
-[patch."ssh://git@github.com/sigmatactical-org/sigma-racer-sidearm.git"]
-sigma-racer-sidearm = { path = "../sigma-racer-sidearm" }
+# sigma-racer-sidearm is consumed at the pinned git rev in Cargo.toml. To develop
+# it side-by-side, add a local path patch in an *uncommitted* config, e.g.:
+#   cargo build --config 'patch."ssh://git@github.com/sigmatactical-org/sigma-racer-sidearm.git".sigma-racer-sidearm.path="../sigma-racer-sidearm"'
+# Do not commit that patch here: CI checks out this repo alone, so the relative
+# path does not exist there and dependency resolution fails.
 
 [env]
 DEFMT_LOG = "info"

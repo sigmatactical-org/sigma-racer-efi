@@ -1017,6 +1017,7 @@ dependencies = [
 [[package]]
 name = "sigma-racer-sidearm"
 version = "0.1.0"
+source = "git+ssh://git@github.com/sigmatactical-org/sigma-racer-sidearm.git?rev=e6bf6e4#e6bf6e4410321ce4abb590d501afdb0b9b8731a3"
 dependencies = [
  "dbc-rs",
 ]
