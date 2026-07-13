@@ -1,6 +1,8 @@
 # Sigma Racer EFI
 
 [![CI](https://github.com/sigmatactical-org/sigma-racer-efi/actions/workflows/ci.yml/badge.svg)](https://github.com/sigmatactical-org/sigma-racer-efi/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](#license)
+[![MSRV](https://img.shields.io/badge/MSRV-1.92.0-blue.svg)](https://www.rust-lang.org)
 
 Rust engine control firmware for the [microRusEFI](https://www.shop.rusefi.com/shop/p/microrusefi-assembled-ecu-development-module) ECU, built on [Embassy](https://embassy.dev/) and conceptually ported from [rusEFI](https://github.com/rusefi/rusefi).
 
@@ -121,3 +123,12 @@ Priority order for porting rusEFI subsystems into Rust:
 © Sigma Tactical Group. **All rights reserved.**
 
 The Sigma Tactical Group name, logos, marks, artwork, and visual identity are **proprietary**. They are not covered by this repository's source-code license. See [BRANDING.md](BRANDING.md).
+
+## License
+
+Licensed under either of
+
+- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or <http://www.apache.org/licenses/LICENSE-2.0>)
+- MIT license ([LICENSE-MIT](LICENSE-MIT) or <http://opensource.org/licenses/MIT>)
+
+at your option.

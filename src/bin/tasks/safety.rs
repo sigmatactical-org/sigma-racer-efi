@@ -36,7 +36,10 @@ async fn supervisor(mut tle: Tle8888Bus) {
 }
 
 /// Spawn the safety supervisor task.
-pub fn spawn_supervisor(spawner: &Spawner, tle: Tle8888Bus) -> Result<(), embassy_executor::SpawnError> {
+pub fn spawn_supervisor(
+    spawner: &Spawner,
+    tle: Tle8888Bus,
+) -> Result<(), embassy_executor::SpawnError> {
     spawner.spawn(supervisor(tle)?);
     Ok(())
 }

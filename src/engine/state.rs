@@ -1,9 +1,9 @@
 //! Runtime engine state and fuel/ignition scheduling hooks.
 
-use crate::sensor::{CLT_NTC, IAT_NTC, VBATT_SCALING};
-use crate::engine::{EngineConfig, IgnitionMode, InjectionMode};
 use crate::engine::EngineProfile;
+use crate::engine::{EngineConfig, IgnitionMode, InjectionMode};
 use crate::fuel::{PLACEHOLDER_INJECTOR, PLACEHOLDER_VE, SpeedDensityInputs, base_pulse_ms};
+use crate::sensor::{CLT_NTC, IAT_NTC, VBATT_SCALING};
 
 /// Closed-loop target for the base pulse; lambda trim owns the rest.
 const STOICH_AFR: f32 = 14.7;
@@ -120,8 +120,8 @@ impl EngineState {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::engine::{IgnitionMode, InjectionMode};
     use crate::engine::yamaha_cp3;
+    use crate::engine::{IgnitionMode, InjectionMode};
 
     #[test]
     fn cranking_injection_uses_cranking_mode() {

@@ -13,9 +13,7 @@ pub mod state;
 pub mod yamaha_cp3;
 
 pub use config::{ConfigError, EngineConfig, IgnitionMode, InjectionMode, MAX_CYLINDERS};
-pub use profile::{
-    CYCLE_DEGREES_FOUR_STROKE, EngineProfile, ProfileError,
-};
+pub use profile::{CYCLE_DEGREES_FOUR_STROKE, EngineProfile, ProfileError};
 pub use state::EngineState;
 
 /// Engine profile selected at compile time via Cargo features.

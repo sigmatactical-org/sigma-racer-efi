@@ -71,7 +71,11 @@ impl MreBoard {
     pub fn init(
         pins: BoardPins,
         p: embassy_stm32::Peripherals,
-    ) -> (Self, Tle8888Bus, embassy_stm32::Peri<'static, embassy_stm32::peripherals::IWDG>) {
+    ) -> (
+        Self,
+        Tle8888Bus,
+        embassy_stm32::Peri<'static, embassy_stm32::peripherals::IWDG>,
+    ) {
         if pins != BoardPins::mre_f7() {
             defmt::panic!("BoardPins do not match the MRE F7 map");
         }

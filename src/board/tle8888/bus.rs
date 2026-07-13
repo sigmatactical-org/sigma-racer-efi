@@ -3,12 +3,12 @@
 //! Uses SPI1 (`0x40013000`, Zephyr `stm32f7.dtsi` / RM0410 §2.2.2) on `PB3`/`PB5`/`PB4`
 //! with active-low CS on `PD5`.
 
+use super::command::{self as tle8888, CMD_SR, INIT_SAFE};
 use embassy_stm32::gpio::Output;
 use embassy_stm32::mode::Blocking;
 use embassy_stm32::spi::mode::Master;
 use embassy_stm32::spi::{Config as SpiConfig, Spi};
 use embassy_stm32::time::Hertz;
-use super::command::{self as tle8888, CMD_SR, INIT_SAFE};
 
 /// SPI1 bus to the onboard TLE8888.
 pub struct Tle8888Bus {

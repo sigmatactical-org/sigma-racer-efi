@@ -54,7 +54,11 @@ fn axis_index<const N: usize>(axis: &[f32; N], x: f32) -> (usize, f32) {
         i += 1;
     }
     let span = axis[i + 1] - axis[i];
-    let frac = if span > 0.0 { (x - axis[i]) / span } else { 0.0 };
+    let frac = if span > 0.0 {
+        (x - axis[i]) / span
+    } else {
+        0.0
+    };
     (i, frac)
 }
 
@@ -88,11 +92,7 @@ mod tests {
         Table {
             row_axis: [1_000.0, 4_000.0, 8_000.0],
             col_axis: [20.0, 60.0, 100.0],
-            values: [
-                [10.0, 20.0, 30.0],
-                [40.0, 50.0, 60.0],
-                [70.0, 80.0, 90.0],
-            ],
+            values: [[10.0, 20.0, 30.0], [40.0, 50.0, 60.0], [70.0, 80.0, 90.0]],
         }
     }
 

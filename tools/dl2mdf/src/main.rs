@@ -129,7 +129,9 @@ fn parse_args(argv: &[String]) -> Result<Args, String> {
             other => return Err(format!("unexpected argument: {other}")),
         }
     }
-    let dl_path = dl_path.ok_or("usage: dl2mdf <capture.log> [--can <candump.log>] [--can-offset-s <s>] [-o <out.mf4>]")?;
+    let dl_path = dl_path.ok_or(
+        "usage: dl2mdf <capture.log> [--can <candump.log>] [--can-offset-s <s>] [-o <out.mf4>]",
+    )?;
     let out_path = out_path.unwrap_or_else(|| format!("{dl_path}.mf4"));
     Ok(Args {
         dl_path,
@@ -228,7 +230,11 @@ fn run(args: &Args) -> Result<(), String> {
                 ch.data_type = DataType::UnsignedIntegerLE;
                 ch.name = Some("line".into());
             })?;
-            writer.add_value_to_text_conversion(&[(0i64, "CRANK"), (1i64, "CAM")], "?", Some(&line))?;
+            writer.add_value_to_text_conversion(
+                &[(0i64, "CRANK"), (1i64, "CAM")],
+                "?",
+                Some(&line),
+            )?;
             let count = writer.add_channel(&cg, Some(&line), |ch| {
                 ch.data_type = DataType::UnsignedIntegerLE;
                 ch.name = Some("count".into());

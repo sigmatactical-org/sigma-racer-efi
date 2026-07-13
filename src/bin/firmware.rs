@@ -62,9 +62,7 @@ async fn main(spawner: Spawner) {
         profile.engine.cylinders, profile.engine.displacement_cc, profile.cycle_degrees
     );
     info!("stage 1: characterization data logger (DL,S sensor / DL,T trigger records)");
-    warn!(
-        "profile trigger geometry + rev limits are UNVERIFIED placeholders — logger stage only"
-    );
+    warn!("profile trigger geometry + rev limits are UNVERIFIED placeholders — logger stage only");
 
     let logger_tokens = (
         tasks::sensors::sample(board.adc, board.sensors),

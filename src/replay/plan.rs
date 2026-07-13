@@ -176,7 +176,10 @@ mod tests {
             .steps()
             .filter(|s| matches!(s, Step::Crank { .. }))
             .count();
-        let cam = plan.steps().filter(|s| matches!(s, Step::Cam { .. })).count();
+        let cam = plan
+            .steps()
+            .filter(|s| matches!(s, Step::Cam { .. }))
+            .count();
         assert_eq!(crank, 4 * WHEEL.effective_edges_per_rev() as usize);
         assert_eq!(cam, 2, "one cam pulse per 720°");
     }
@@ -187,7 +190,11 @@ mod tests {
         let mut decoder = Decoder::new(WHEEL, true);
         play(&plan, &mut decoder);
         assert_eq!(decoder.state(), SyncState::SyncFull);
-        assert!((decoder.rpm() - 1_200.0).abs() < 40.0, "rpm {}", decoder.rpm());
+        assert!(
+            (decoder.rpm() - 1_200.0).abs() < 40.0,
+            "rpm {}",
+            decoder.rpm()
+        );
     }
 
     #[test]
@@ -196,7 +203,11 @@ mod tests {
         let mut decoder = Decoder::new(WHEEL, true);
         play(&plan, &mut decoder);
         assert_eq!(decoder.state(), SyncState::SyncFull);
-        assert!((decoder.rpm() - 3_000.0).abs() < 120.0, "rpm {}", decoder.rpm());
+        assert!(
+            (decoder.rpm() - 3_000.0).abs() < 120.0,
+            "rpm {}",
+            decoder.rpm()
+        );
     }
 
     #[test]

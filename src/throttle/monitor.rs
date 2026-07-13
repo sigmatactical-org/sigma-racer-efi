@@ -14,7 +14,6 @@
 
 use crate::throttle::{RbwConfig, RbwInputs};
 
-
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Side {
     A,
@@ -148,9 +147,8 @@ impl RbwMonitor {
         if !self.inputs_healthy(inputs) {
             return false;
         }
-        let demand = (self.cfg.app_a.to_pct(inputs.app_a_v)
-            + self.cfg.app_b.to_pct(inputs.app_b_v))
-            / 2.0;
+        let demand =
+            (self.cfg.app_a.to_pct(inputs.app_a_v) + self.cfg.app_b.to_pct(inputs.app_b_v)) / 2.0;
         if demand > self.cfg.idle_demand_pct {
             return false;
         }
@@ -167,9 +165,8 @@ impl RbwMonitor {
         if self.state != RbwState::Armed || !self.inputs_healthy(inputs) {
             return false;
         }
-        let demand = (self.cfg.app_a.to_pct(inputs.app_a_v)
-            + self.cfg.app_b.to_pct(inputs.app_b_v))
-            / 2.0;
+        let demand =
+            (self.cfg.app_a.to_pct(inputs.app_a_v) + self.cfg.app_b.to_pct(inputs.app_b_v)) / 2.0;
         demand <= self.cfg.idle_demand_pct
     }
 
@@ -348,7 +345,10 @@ mod tests {
         inputs.app_a_v = 0.1;
         inputs.app_b_v = 0.1;
         assert_eq!(m.evaluate(&inputs), RbwCommand::FailSafe);
-        assert_eq!(m.state(), RbwState::Tripped(TripCause::AppOutOfRange(Side::A)));
+        assert_eq!(
+            m.state(),
+            RbwState::Tripped(TripCause::AppOutOfRange(Side::A))
+        );
     }
 
     // ---- Latch, re-arm, start permit ----

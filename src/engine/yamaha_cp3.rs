@@ -1,8 +1,8 @@
 //! Yamaha CP3 — 890 cc inline triple (Crossplane Concept 3-cylinder).
 
 use crate::engine::firing;
-use crate::engine::{EngineConfig, IgnitionMode, InjectionMode};
 use crate::engine::{CYCLE_DEGREES_FOUR_STROKE, EngineProfile};
+use crate::engine::{EngineConfig, IgnitionMode, InjectionMode};
 use crate::trigger::{TriggerInputKind, TriggerSetup, TriggerWheel};
 
 pub const ID: &str = "Yamaha CP3";

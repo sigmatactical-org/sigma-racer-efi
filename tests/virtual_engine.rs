@@ -17,12 +17,14 @@
 //!
 //! When the boards arrive, the only untested layer left is electronics.
 
-use sigma_racer_efi::trigger::{Decoder, SyncState};
-use sigma_racer_efi::fuel::{PLACEHOLDER_INJECTOR, PLACEHOLDER_VE, SpeedDensityInputs, base_pulse_ms};
-use sigma_racer_efi::throttle::{RbwCommand, RbwConfig, RbwInputs, RbwMonitor, RbwState};
+use sigma_racer_efi::fuel::{
+    PLACEHOLDER_INJECTOR, PLACEHOLDER_VE, SpeedDensityInputs, base_pulse_ms,
+};
 use sigma_racer_efi::replay::{ReplayPlan, Step};
 use sigma_racer_efi::scheduler::{ArmedBuf, EventId, Scheduler, deg_per_us_from_rpm};
+use sigma_racer_efi::throttle::{RbwCommand, RbwConfig, RbwInputs, RbwMonitor, RbwState};
 use sigma_racer_efi::trigger::TriggerWheel;
+use sigma_racer_efi::trigger::{Decoder, SyncState};
 
 const WHEEL: TriggerWheel = TriggerWheel {
     teeth: 12,
@@ -80,7 +82,9 @@ fn run(plans: &[ReplayPlan], fault_after_us: Option<u64>) -> VirtualRun {
     let mut decoder = Decoder::new(WHEEL, true);
     let mut scheduler = Scheduler::new(CYCLE);
     for cyl in 0..3u8 {
-        scheduler.set_event(EventId::Fire(cyl), fire_angle(cyl)).unwrap();
+        scheduler
+            .set_event(EventId::Fire(cyl), fire_angle(cyl))
+            .unwrap();
         scheduler
             .set_event(EventId::InjClose(cyl), inj_close_angle(cyl))
             .unwrap();
@@ -272,7 +276,10 @@ fn virtual_engine_pulse_widths_are_physical() {
     let run = run(&flare_and_idle(), None);
     assert!(!run.pulses_ms.is_empty());
     for &pw in &run.pulses_ms {
-        assert!(pw > 1.0 && pw < 10.0, "pulse {pw} ms out of plausible range");
+        assert!(
+            pw > 1.0 && pw < 10.0,
+            "pulse {pw} ms out of plausible range"
+        );
     }
 }
 

@@ -36,7 +36,7 @@ pub use firmware::ensure;
 #[cfg(feature = "firmware")]
 mod firmware {
     use super::BorLevel;
-        use defmt::{info, warn};
+    use defmt::{info, warn};
     use stm32_metapac::FLASH;
 
     const OPTKEY1: u32 = 0x0819_2A3B;

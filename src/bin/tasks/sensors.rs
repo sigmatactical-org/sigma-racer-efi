@@ -12,8 +12,8 @@ use embassy_stm32::peripherals::ADC1;
 use embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex;
 use embassy_sync::watch::Watch;
 use embassy_time::{Duration, Instant, Ticker};
-use sigma_racer_efi::sensor::{RawSweep, SensorFrame, counts_to_pin_volts};
 use sigma_racer_efi::board::mre_board::SensorChannels;
+use sigma_racer_efi::sensor::{RawSweep, SensorFrame, counts_to_pin_volts};
 
 /// Latest scaled frame, shared with any consumer.
 pub static LATEST: Watch<CriticalSectionRawMutex, SensorFrame, 2> = Watch::new();

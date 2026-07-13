@@ -215,8 +215,8 @@ impl Decoder {
 
         match (self.state, is_gap) {
             (SyncState::Lost | SyncState::Syncing, true) => {
-                let confirming = self.state == SyncState::Syncing
-                    && self.position == self.physical_teeth() - 1;
+                let confirming =
+                    self.state == SyncState::Syncing && self.position == self.physical_teeth() - 1;
                 self.position = 0;
                 if confirming {
                     // Second gap with exactly the right tooth count between:
@@ -374,7 +374,10 @@ mod tests {
         }
         let pitch = 360.0 / 12.0;
         for (i, angle) in angles.iter().enumerate() {
-            assert!((angle - i as f32 * pitch).abs() < 0.01, "tooth {i}: {angle}");
+            assert!(
+                (angle - i as f32 * pitch).abs() < 0.01,
+                "tooth {i}: {angle}"
+            );
         }
     }
 
@@ -383,7 +386,11 @@ mod tests {
         let (crank, cam) = capture(WHEEL, 4, |_| 1_200.0);
         let mut decoder = Decoder::new(WHEEL, true);
         run(&mut decoder, &crank, &cam);
-        assert!((decoder.rpm() - 1_200.0).abs() < 40.0, "rpm {}", decoder.rpm());
+        assert!(
+            (decoder.rpm() - 1_200.0).abs() < 40.0,
+            "rpm {}",
+            decoder.rpm()
+        );
     }
 
     #[test]

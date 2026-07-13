@@ -1,8 +1,8 @@
 //! Logical cylinder → microRusEFI output mapping and profile validation.
 
-use crate::engine::MAX_CYLINDERS;
-use crate::engine::EngineProfile;
 use crate::board::{BoardPins, GpioPin, TleOutput};
+use crate::engine::EngineProfile;
+use crate::engine::MAX_CYLINDERS;
 
 const INJECTORS: [TleOutput; MAX_CYLINDERS] = [
     TleOutput::Injector1,
@@ -83,16 +83,13 @@ mod tests {
         assert_eq!(injector_for(0), Some(TleOutput::Injector1));
         assert_eq!(injector_for(2), Some(TleOutput::Injector3));
         let pins = crate::board::BoardPins::mre_f7();
-        assert_eq!(
-            ignition_for(&pins, 1),
-            Some(GpioPin::new(GpioPort::D, 3))
-        );
+        assert_eq!(ignition_for(&pins, 1), Some(GpioPin::new(GpioPort::D, 3)));
     }
 
     #[test]
     fn rejects_profile_with_invalid_firing_index() {
-        use crate::engine::{EngineConfig, IgnitionMode, InjectionMode};
         use crate::engine::{CYCLE_DEGREES_FOUR_STROKE, EngineProfile};
+        use crate::engine::{EngineConfig, IgnitionMode, InjectionMode};
         use crate::trigger::{TriggerInputKind, TriggerSetup, TriggerWheel};
 
         let bad = EngineProfile {
