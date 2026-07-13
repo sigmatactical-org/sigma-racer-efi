@@ -205,6 +205,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "dbc-rs"
+version = "0.7.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2ee7c13ca0b470f850f67e57e6d7a37a982665742a13fb0f09d2035220bef3f0"
+dependencies = [
+ "sigma-bounded",
+]
+
+[[package]]
 name = "defmt"
 version = "0.3.100"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -488,9 +497,9 @@ dependencies = [
 
 [[package]]
 name = "embedded-alloc"
-version = "0.6.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8f2de9133f68db0d4627ad69db767726c99ff8585272716708227008d3f1bddd"
+checksum = "2db634e07f552215f7a3572dc0a4d29760c637fcea5a8c18d2cc291f782c216c"
 dependencies = [
  "const-default",
  "critical-section",
@@ -742,7 +751,7 @@ version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b79a70eb13d36d6b28c9e42af4974012830c9a814fe8a2bbcc3b6b6a15d909e4"
 dependencies = [
- "dbc-rs",
+ "dbc-rs 0.5.2",
  "embedded-can",
  "serde",
  "serde_json",
@@ -1018,7 +1027,7 @@ dependencies = [
 name = "sigma-racer-sidearm"
 version = "0.1.0"
 dependencies = [
- "dbc-rs",
+ "dbc-rs 0.7.1",
 ]
 
 [[package]]

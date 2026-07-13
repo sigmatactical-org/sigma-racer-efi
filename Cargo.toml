@@ -69,7 +69,7 @@ embassy-time = { version = "0.5.1", optional = true, features = [
     "tick-hz-1_000_000",
 ] }
 embassy-sync = { version = "0.8.0", optional = true, features = ["defmt"] }
-defmt = { version = "1.0.1", optional = true }
+defmt = { version = "1.1.1", optional = true }
 defmt-rtt = { version = "1.0.0", optional = true }
 cortex-m = { version = "0.7.6", optional = true, features = [
     "inline-asm",
@@ -79,8 +79,8 @@ cortex-m-rt = { version = "0.7.0", optional = true }
 panic-probe = { version = "1.0.0", optional = true, features = ["print-defmt"] }
 critical-section = { version = "1.1.4", optional = true }
 static_cell = { version = "2.1.1", optional = true }
-stm32-metapac = { version = "21", optional = true, features = ["stm32f767vi"] }
-embedded-alloc = { version = "0.6", optional = true }
+stm32-metapac = { version = "21.0.0", optional = true, features = ["stm32f767vi"] }
+embedded-alloc = { version = "0.7.0", optional = true }
 
 [package.metadata.embassy]
 build = [
