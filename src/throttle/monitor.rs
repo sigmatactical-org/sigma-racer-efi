@@ -44,8 +44,7 @@ impl RbwMonitor {
         }
     }
 
-/// Current safety state.
-
+    /// Current safety state.
     pub fn state(&self) -> RbwState {
         self.state
     }

@@ -27,35 +27,36 @@ pub const fn cmd_r(reg: u8) -> u16 {
 
 /// Read the status register.
 pub const CMD_SR: u16 = cmd_w(0x1a, 0x03);
-/// Assert the output-enable flag.
+/// Unlock configuration writes.
 pub const CMD_CHIP_UNLOCK: u16 = cmd_w(0x1e, 0x01);
-/// Service the window watchdog.
+/// Assert the output-enable flag.
 pub const CMD_OE_SET: u16 = cmd_w(0x1c, 0x02);
-/// Configure input mapping register `n`.
+/// Clear the output-enable flag.
 pub const CMD_OE_CLR: u16 = cmd_w(0x1c, 0x01);
+/// Service the window watchdog.
 pub const CMD_WWDSERVICECMD: u16 = cmd_w(0x15, 0x03);
 
-/// Configure output mode register `n`.
+/// Configure input mapping register `n`.
 pub const fn cmd_inconfig(n: u8, data: u8) -> u16 {
     cmd_w(0x53 + (n & 0x03), data)
 }
 
-/// Configure output-enable register `n`.
-
+/// Configure output mode register `n`.
 pub const fn cmd_outconfig(n: u8, data: u8) -> u16 {
-    /// Configure direct-drive register `n`.
     cmd_w(0x40 + n, data)
 }
 
-/// Configure VR-sensor register `n`.
+/// Configure output-enable register `n`.
 pub const fn cmd_oeconfig(n: u8, data: u8) -> u16 {
     cmd_w(0x58 + n, data)
 }
 
+/// Configure direct-drive register `n`.
 pub const fn cmd_ddconfig(n: u8, data: u8) -> u16 {
     cmd_w(0x5c + n, data)
 }
 
+/// Configure VR-sensor register `n`.
 pub const fn cmd_vrsconfig(n: u8, data: u8) -> u16 {
     cmd_w(0x49 + (n & 0x03), data)
 }

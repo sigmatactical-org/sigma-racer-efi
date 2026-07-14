@@ -31,8 +31,7 @@ impl EngineConfig {
         self.cylinders as usize
     }
 
-/// Sanity-check the configuration at boot.
-
+    /// Sanity-check the configuration at boot.
     pub const fn validate(&self) -> Result<(), ConfigError> {
         if self.cylinders == 0 || self.cylinders as usize > MAX_CYLINDERS {
             return Err(ConfigError::InvalidCylinderCount);

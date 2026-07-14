@@ -35,8 +35,7 @@ impl EdgeIntervals {
         }
     }
 
-/// Total edges observed.
-
+    /// Total edges observed.
     pub fn count(&self) -> u32 {
         self.count
     }

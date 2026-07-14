@@ -9,7 +9,6 @@ use crate::trigger::{TriggerInputKind, TriggerSetup, TriggerWheel};
 pub const ID: &str = "Yamaha CP3";
 
 /// The Yamaha CP3 (XSR900) engine profile.
-
 pub fn profile() -> EngineProfile {
     EngineProfile {
         id: ID,

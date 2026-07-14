@@ -34,7 +34,6 @@ pub const CLT_NTC: NtcConfig = NtcConfig {
 };
 
 /// Intake-air temperature NTC (datasheet curve).
-
 pub const IAT_NTC: NtcConfig = NtcConfig {
     bias_resistor_ohms: 2_700.0,
     beta: 3_500.0,
@@ -60,10 +59,10 @@ pub enum MreAdcInput {
     Adc12,
     Adc13,
     Adc14,
-    /// ADC input descriptor for an MRE analog channel.
     Adc15,
 }
 
+/// ADC input descriptor for an MRE analog channel.
 pub fn mre_adc_input(channel: AdcChannel) -> MreAdcInput {
     match channel {
         AdcChannel::Battery => MreAdcInput::Adc11,

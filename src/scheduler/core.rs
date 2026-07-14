@@ -58,8 +58,7 @@ impl Scheduler {
         }
     }
 
-/// Remove a pending event by id.
-
+    /// Remove a pending event by id.
     pub fn clear_event(&mut self, id: EventId) {
         for slot in &mut self.events {
             if slot.is_some_and(|e| e.id == id) {

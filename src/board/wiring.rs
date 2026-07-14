@@ -13,31 +13,33 @@ const INJECTORS: [TleOutput; MAX_CYLINDERS] = [
 
 /// Fuel pump relay output.
 pub const FUEL_PUMP: TleOutput = TleOutput::GpOut1;
-/// Spare general-purpose output 3.
+/// Radiator fan relay output.
 pub const RADIATOR_FAN: TleOutput = TleOutput::GpOut2;
-/// VVT solenoid low-side output.
+/// Spare general-purpose output 3.
 pub const AUX_GP_OUT_3: TleOutput = TleOutput::GpOut3;
+/// Spare general-purpose output 4.
 pub const AUX_GP_OUT_4: TleOutput = TleOutput::GpOut4;
-/// Crank trigger (VR/Hall) input pin.
+/// VVT solenoid low-side output.
 pub const VVT_SOLENOID: TleOutput = TleOutput::LowSide1;
+/// Idle air-control low-side output.
 pub const IDLE_IAC: TleOutput = TleOutput::LowSide2;
 
-/// Cam trigger input pin.
+/// Crank trigger (VR/Hall) input pin.
 pub fn trigger_crank(pins: &BoardPins) -> GpioPin {
     pins.trigger_crank
 }
 
-/// Injector output for a cylinder (1-based), if wired.
-
+/// Cam trigger input pin.
 pub fn trigger_cam(pins: &BoardPins) -> GpioPin {
-    /// Ignition coil pin for a cylinder (1-based), if wired.
     pins.trigger_cam
 }
 
+/// Injector output for a cylinder (1-based), if wired.
 pub fn injector_for(cylinder: u8) -> Option<TleOutput> {
     INJECTORS.get(cylinder as usize).copied()
 }
 
+/// Ignition coil pin for a cylinder (1-based), if wired.
 pub fn ignition_for(pins: &BoardPins, cylinder: u8) -> Option<GpioPin> {
     pins.ignition.get(cylinder as usize).copied()
 }

@@ -49,18 +49,17 @@ impl EngineState {
         !self.trigger.synced || self.trigger.rpm < CRANKING_RPM_THRESHOLD
     }
 
-/// Update battery voltage from a raw ADC reading.
-
+    /// Update battery voltage from a raw ADC reading.
     pub fn update_vbatt_from_adc(&mut self, adc_volts: f32) {
-        /// Update coolant temperature from a raw ADC reading.
         self.vbatt = VBATT_SCALING.raw_to_volts(adc_volts);
     }
 
-    /// Update intake-air temperature from a raw ADC reading.
+    /// Update coolant temperature from a raw ADC reading.
     pub fn update_clt_from_adc(&mut self, adc_volts: f32) {
         self.clt_c = CLT_NTC.volts_to_celsius(adc_volts);
     }
 
+    /// Update intake-air temperature from a raw ADC reading.
     pub fn update_iat_from_adc(&mut self, adc_volts: f32) {
         self.iat_c = IAT_NTC.volts_to_celsius(adc_volts);
     }

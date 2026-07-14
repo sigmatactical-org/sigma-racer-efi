@@ -23,8 +23,8 @@ pub const PLACEHOLDER_DWELL: DwellModel = DwellModel {
     max_dwell_ms: 8.0,
 };
 
-/// Dwell time for the current battery voltage (linear vbatt comp).
 impl DwellModel {
+    /// Dwell time for the current battery voltage (linear vbatt comp).
     pub fn dwell_ms(&self, vbatt: f32) -> f32 {
         let d = self.dwell_ms.lookup(vbatt);
         if d > self.max_dwell_ms {

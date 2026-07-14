@@ -24,8 +24,7 @@ impl TriggerWheel {
         }
     }
 
-/// Edges per revolution after missing-tooth subtraction.
-
+    /// Edges per revolution after missing-tooth subtraction.
     pub const fn effective_edges_per_rev(self) -> u8 {
         self.teeth.saturating_sub(self.missing)
     }

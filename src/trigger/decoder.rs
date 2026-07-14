@@ -61,18 +61,17 @@ impl Decoder {
         }
     }
 
-/// Current sync state.
-
+    /// Current sync state.
     pub fn state(&self) -> SyncState {
         self.state
     }
 
     /// The spark gate: nothing fires below full sync.
     pub fn spark_allowed(&self) -> bool {
-        /// Latest rpm estimate (0 when unsynced).
         self.state == SyncState::SyncFull
     }
 
+    /// Latest rpm estimate (0 when unsynced).
     pub fn rpm(&self) -> f32 {
         self.rpm
     }

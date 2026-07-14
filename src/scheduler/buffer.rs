@@ -12,41 +12,40 @@ pub struct ArmedBuf {
     len: usize,
 }
 
-/// Empty buffer.
 impl ArmedBuf {
+    /// Empty buffer.
     pub const fn new() -> Self {
         Self {
             items: [None; MAX_EVENTS],
             len: 0,
         }
-    /// Drop every armed event.
     }
 
+    /// Drop every armed event.
     pub fn clear(&mut self) {
         self.items = [None; MAX_EVENTS];
-        /// Append an armed event; silently drops when full (diagnosed upstream).
         self.len = 0;
     }
 
+    /// Append an armed event; silently drops when full (diagnosed upstream).
     pub(crate) fn push(&mut self, armed: Armed) {
         if self.len < MAX_EVENTS {
             self.items[self.len] = Some(armed);
-            /// Number of armed events.
             self.len += 1;
         }
     }
 
-/// Whether no events are armed.
-
+    /// Number of armed events.
     pub fn len(&self) -> usize {
-        /// Iterate armed events in arming order.
         self.len
     }
 
+    /// Whether no events are armed.
     pub fn is_empty(&self) -> bool {
         self.len == 0
     }
 
+    /// Iterate armed events in arming order.
     pub fn iter(&self) -> impl Iterator<Item = &Armed> {
         self.items[..self.len].iter().flatten()
     }
