@@ -489,7 +489,7 @@ Priority order for wiring library logic into firmware:
 
 | Item | Value |
 |------|-------|
-| Toolchain | Rust 1.92.0 (`rust-toolchain.toml`) |
+| Toolchain | Rust 1.97.0 (`rust-toolchain.toml`) |
 | Target | `thumbv7em-none-eabihf` |
 | Runner | `probe-rs run --chip STM32F767VI` (`.cargo/config.toml`) |
 | Link | `build.rs` adds `--nmagic`, `-Tlink.x`, `-Tdefmt.x` for thumb |
