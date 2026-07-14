@@ -8,4 +8,4 @@ homepage = "https://sigmatactical.org"
 publish = false
 
 [dependencies]
-mdf4-rs = "0.3.3"
+mdf4-rs = "0.4.0"
