@@ -17,6 +17,7 @@ pub struct Tle8888Bus {
 }
 
 impl Tle8888Bus {
+    /// Wrap the SPI bus + chip-select and run the unlock sequence.
     pub fn new(spi: Spi<'static, Blocking, Master>, mut cs: Output<'static>) -> Self {
         cs.set_high();
         Self { spi, cs }

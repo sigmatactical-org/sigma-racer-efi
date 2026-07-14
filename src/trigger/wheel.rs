@@ -8,6 +8,7 @@ pub struct TriggerWheel {
 }
 
 impl TriggerWheel {
+    /// The stock 60-2 crank wheel.
     pub const fn sixty_minus_two() -> Self {
         Self {
             teeth: 60,
@@ -22,6 +23,8 @@ impl TriggerWheel {
             missing: 1,
         }
     }
+
+/// Edges per revolution after missing-tooth subtraction.
 
     pub const fn effective_edges_per_rev(self) -> u8 {
         self.teeth.saturating_sub(self.missing)

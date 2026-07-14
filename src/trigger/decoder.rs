@@ -15,80 +15,18 @@
 //! - The wheel pattern itself is engine data (⚠ [MEASURE] — mule Phase 1);
 //!   the decoder takes whatever [`TriggerWheel`] the profile carries.
 
+mod decode_event;
+mod decoder_output;
+mod desync_cause;
+mod sync_state;
+mod thresholds;
+pub use decode_event::DecodeEvent;
+pub use decoder_output::DecoderOutput;
+pub use desync_cause::DesyncCause;
+pub use sync_state::SyncState;
+pub(crate) use thresholds::Thresholds;
+
 use crate::trigger::{TriggerWheel, rpm_from_period_us};
-
-/// Sync confidence, in increasing order.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
-pub enum SyncState {
-    /// No usable edge stream.
-    Lost,
-    /// Edges arriving; hunting for a confirmed gap.
-    Syncing,
-    /// Crank position known within 360°.
-    SyncCrank,
-    /// Cycle position known within 720° (cam resolved, or cam not required).
-    SyncFull,
-}
-
-/// Why sync degraded.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum DesyncCause {
-    /// A gap-sized period arrived at the wrong wheel position.
-    GapAtWrongPosition,
-    /// Ran past the last physical tooth without seeing the gap.
-    MissedGap,
-    /// Period implausibly long — engine stopped or signal lost.
-    Stall,
-}
-
-/// Notable outcome of feeding one edge.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum DecodeEvent {
-    GapDetected,
-    /// Crank sync achieved (second consistent gap).
-    SyncAchieved,
-    /// Full cycle sync achieved.
-    FullSyncAchieved,
-    /// Edge rejected as noise; sync retained.
-    NoiseRejected,
-    Desync(DesyncCause),
-}
-
-/// Snapshot after an edge.
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct DecoderOutput {
-    pub state: SyncState,
-    pub rpm: f32,
-    /// Crank angle within the cycle, degrees from the tooth after the gap.
-    /// 0..360 at `SyncCrank`; 0..720 at `SyncFull` (four-stroke).
-    pub cycle_angle_deg: f32,
-    pub event: Option<DecodeEvent>,
-}
-
-/// Ratio thresholds (×100) derived from the wheel geometry.
-#[derive(Clone, Copy, Debug)]
-struct Thresholds {
-    /// Below this ×prev the edge is noise.
-    noise_x100: u32,
-    /// At or above this ×prev the period is a gap candidate.
-    gap_low_x100: u32,
-    /// Above this ×prev the engine has stalled / signal lost.
-    gap_high_x100: u32,
-}
-
-impl Thresholds {
-    fn for_wheel(wheel: TriggerWheel) -> Self {
-        // A gap spans (missing + 1) tooth pitches.
-        let gap = (wheel.missing as u32 + 1) * 100;
-        Self {
-            noise_x100: 25,
-            // Halfway between a normal tooth and the gap.
-            gap_low_x100: (100 + gap) / 2,
-            // Generous accel/decel margin above the gap.
-            gap_high_x100: gap + gap / 2,
-        }
-    }
-}
 
 /// The decoder. One instance per engine.
 #[derive(Debug)]
@@ -108,6 +46,7 @@ pub struct Decoder {
 }
 
 impl Decoder {
+    /// Decoder for `wheel`, optionally requiring cam sync for full sync.
     pub fn new(wheel: TriggerWheel, cam_required: bool) -> Self {
         Self {
             wheel,
@@ -122,12 +61,15 @@ impl Decoder {
         }
     }
 
+/// Current sync state.
+
     pub fn state(&self) -> SyncState {
         self.state
     }
 
     /// The spark gate: nothing fires below full sync.
     pub fn spark_allowed(&self) -> bool {
+        /// Latest rpm estimate (0 when unsynced).
         self.state == SyncState::SyncFull
     }
 

@@ -1,9 +1,14 @@
 //! microRusEFI board bring-up: the [`MreBoard`] split of Embassy
 //! peripherals into safe GPIO, ADC channels, trigger inputs and the TLE8888.
 
+mod safe_outputs;
+mod sensor_channels;
+pub use safe_outputs::SafeOutputs;
+pub use sensor_channels::SensorChannels;
+
 use crate::board::BoardPins;
 use crate::board::tle8888::{Tle8888Bus, spi_config};
-use embassy_stm32::adc::{Adc, AdcChannel as _, AnyAdcChannel};
+use embassy_stm32::adc::{Adc, AdcChannel as _};
 use embassy_stm32::exti::ExtiInput;
 use embassy_stm32::gpio::{Level, Output, Pull, Speed};
 use embassy_stm32::mode::Async;
@@ -14,41 +19,6 @@ use embassy_stm32::{bind_interrupts, exti, interrupt};
 bind_interrupts!(struct Irqs {
     EXTI9_5 => exti::InterruptHandler<interrupt::typelevel::EXTI9_5>;
 });
-
-/// ADC channels for the stage-1 sensor sweep (MRE default wiring).
-pub struct SensorChannels {
-    pub vbatt: AnyAdcChannel<'static, ADC1>,
-    pub clt: AnyAdcChannel<'static, ADC1>,
-    pub iat: AnyAdcChannel<'static, ADC1>,
-    pub tps_map: AnyAdcChannel<'static, ADC1>,
-    pub an_volt1: AnyAdcChannel<'static, ADC1>,
-    pub an_volt2: AnyAdcChannel<'static, ADC1>,
-}
-
-/// All actuator pins driven to a known-safe state before any go/no-go decision.
-pub struct SafeOutputs {
-    pub ignition: [Output<'static>; 4],
-    pub inj_en: Output<'static>,
-    pub ign_en: Output<'static>,
-    pub etb_pwm: Output<'static>,
-    pub etb_dir: Output<'static>,
-    pub etb_disable: Output<'static>,
-}
-
-impl SafeOutputs {
-    /// Injectors/coils off, TLE8888 enables low, ETB H-bridge disabled.
-    pub fn drive_off(&mut self) {
-        for coil in &mut self.ignition {
-            coil.set_low();
-        }
-        self.inj_en.set_low();
-        self.ign_en.set_low();
-        self.etb_pwm.set_low();
-        self.etb_dir.set_low();
-        // TLE9201 DIS low = motor disabled.
-        self.etb_disable.set_low();
-    }
-}
 
 /// The microRusEFI F7 board, split into owned Embassy devices.
 pub struct MreBoard {

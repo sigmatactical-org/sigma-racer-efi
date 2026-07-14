@@ -10,6 +10,7 @@ pub enum Step {
 }
 
 impl Step {
+    /// Microseconds to wait before this edge.
     pub fn delay_us(&self) -> u32 {
         match *self {
             Step::Crank { delay_us } | Step::Cam { delay_us } => delay_us,

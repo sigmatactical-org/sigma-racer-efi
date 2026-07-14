@@ -3,6 +3,11 @@
 //! Injectors and several outputs route through the onboard TLE8888 smart driver;
 //! logical connector names are preserved as documentation on each field.
 
+mod gpio_pin;
+mod gpio_port;
+pub use gpio_pin::GpioPin;
+pub use gpio_port::GpioPort;
+
 /// MCU pin names for the microRusEFI PCB (STM32F767).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct BoardPins {
@@ -55,28 +60,6 @@ pub struct BoardPins {
     // --- Console UART (USART3 on J12/J13 — conflicts with SD DMA in rusEFI) ---
     pub console_tx: GpioPin,
     pub console_rx: GpioPin,
-}
-
-/// STM32 port/pin identifier (e.g. `PD4` → port D, pin 4).
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub struct GpioPin {
-    pub port: GpioPort,
-    pub pin: u8,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub enum GpioPort {
-    A,
-    B,
-    C,
-    D,
-    E,
-}
-
-impl GpioPin {
-    pub const fn new(port: GpioPort, pin: u8) -> Self {
-        Self { port, pin }
-    }
 }
 
 impl BoardPins {

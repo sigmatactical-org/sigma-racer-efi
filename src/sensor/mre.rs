@@ -13,6 +13,7 @@ pub const ANALOG_INPUT_DIVIDER: f32 = 16.8 / 10.0;
 /// Battery sense: 39 kΩ / 10 kΩ divider, scaled by `ANALOG_INPUT_DIVIDER`.
 pub const VBATT_DIVIDER: f32 = (49.0 / 10.0) * ANALOG_INPUT_DIVIDER;
 
+/// Battery-voltage channel scaling.
 pub const VBATT_SCALING: AnalogScaling = AnalogScaling {
     multiplier: VBATT_DIVIDER,
     offset: 0.0,
@@ -31,6 +32,8 @@ pub const CLT_NTC: NtcConfig = NtcConfig {
     bias_supply_volts: 5.0,
     input_divider: 1.0,
 };
+
+/// Intake-air temperature NTC (datasheet curve).
 
 pub const IAT_NTC: NtcConfig = NtcConfig {
     bias_resistor_ohms: 2_700.0,
@@ -57,6 +60,7 @@ pub enum MreAdcInput {
     Adc12,
     Adc13,
     Adc14,
+    /// ADC input descriptor for an MRE analog channel.
     Adc15,
 }
 

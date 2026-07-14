@@ -1,29 +1,14 @@
 //! Engine configuration persisted in flash / tuned at runtime.
 
+mod config_error;
+mod ignition_mode;
+mod injection_mode;
+pub use config_error::ConfigError;
+pub use ignition_mode::IgnitionMode;
+pub use injection_mode::InjectionMode;
+
 /// Number of cylinders supported by the core engine model (microRusEFI limit).
 pub const MAX_CYLINDERS: usize = 4;
-
-/// How injectors are fired relative to crank events.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
-pub enum InjectionMode {
-    /// All injectors open together on each fuel event.
-    #[default]
-    Simultaneous,
-    /// One injector per fuel event, following firing order.
-    Sequential,
-    /// Pairs or batches of injectors (e.g. batch fire per bank).
-    Batch,
-}
-
-/// Coil wiring strategy.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Default)]
-pub enum IgnitionMode {
-    /// One coil per cylinder, fired on compression stroke only.
-    #[default]
-    IndividualCoils,
-    /// Pairs of cylinders share a coil (360° wasted spark).
-    WastedSpark,
-}
 
 /// Top-level tunable engine configuration.
 #[derive(Clone, Debug, PartialEq)]
@@ -41,9 +26,12 @@ pub struct EngineConfig {
 }
 
 impl EngineConfig {
+    /// Number of cylinders configured.
     pub const fn cylinder_count(&self) -> usize {
         self.cylinders as usize
     }
+
+/// Sanity-check the configuration at boot.
 
     pub const fn validate(&self) -> Result<(), ConfigError> {
         if self.cylinders == 0 || self.cylinders as usize > MAX_CYLINDERS {
@@ -75,15 +63,6 @@ impl EngineConfig {
 
         Ok(())
     }
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum ConfigError {
-    InvalidCylinderCount,
-    FiringSequenceLength,
-    InvalidFiringIndex,
-    DuplicateFiringIndex,
-    IncompleteFiringSequence,
 }
 
 #[cfg(test)]

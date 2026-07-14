@@ -12,39 +12,16 @@
 //! runaway). Fail-safe is latched; recovery is a deliberate zero-demand
 //! re-arm; the engine start permit requires armed + plausible + idle demand.
 
+mod rbw_command;
+mod rbw_state;
+mod side;
+mod trip_cause;
+pub use rbw_command::RbwCommand;
+pub use rbw_state::RbwState;
+pub use side::Side;
+pub use trip_cause::TripCause;
+
 use crate::throttle::{RbwConfig, RbwInputs};
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Side {
-    A,
-    B,
-}
-
-/// Why the monitor tripped.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum TripCause {
-    AppOutOfRange(Side),
-    TpsOutOfRange(Side),
-    AppDisagreement,
-    TpsDisagreement,
-    /// Plate not following the command: stuck, runaway, or motor fault.
-    Tracking,
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum RbwState {
-    Armed,
-    Tripped(TripCause),
-}
-
-/// The monitor's verdict for this tick.
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum RbwCommand {
-    /// All checks healthy: rider demand, normalized percent.
-    Normal { demand_pct: f32 },
-    /// Cut the H-bridge → spring closes the plate → cut fuel. Latched.
-    FailSafe,
-}
 
 #[derive(Debug)]
 pub struct RbwMonitor {
@@ -56,6 +33,7 @@ pub struct RbwMonitor {
 }
 
 impl RbwMonitor {
+    /// Monitor in the `Init` state with the given config.
     pub fn new(cfg: RbwConfig) -> Self {
         Self {
             cfg,
@@ -65,6 +43,8 @@ impl RbwMonitor {
             tracking_err_since: None,
         }
     }
+
+/// Current safety state.
 
     pub fn state(&self) -> RbwState {
         self.state

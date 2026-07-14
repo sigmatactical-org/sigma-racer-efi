@@ -5,20 +5,12 @@
 //! consecutive edges, without assuming any wheel geometry up front. Used by
 //! the stage-1 data logger before the decoder is trusted.
 
-/// Which trigger line an edge came from.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum TriggerLine {
-    Crank,
-    Cam,
-}
-
-/// A timestamped trigger edge.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct EdgeEvent {
-    pub t_us: u64,
-    pub line: TriggerLine,
-    pub rising: bool,
-}
+mod edge_event;
+mod edge_report;
+mod trigger_line;
+pub use edge_event::EdgeEvent;
+pub use edge_report::EdgeReport;
+pub use trigger_line::TriggerLine;
 
 /// Interval statistics for one trigger line.
 ///
@@ -33,18 +25,8 @@ pub struct EdgeIntervals {
     last_period_us: Option<u32>,
 }
 
-/// Derived numbers for one recorded edge.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct EdgeReport {
-    /// Total edges seen on this line, including this one.
-    pub count: u32,
-    /// Microseconds since the previous edge.
-    pub period_us: u32,
-    /// This period ÷ previous period, ×100. Zero when no previous period.
-    pub gap_ratio_x100: u32,
-}
-
 impl EdgeIntervals {
+    /// Empty interval tracker.
     pub const fn new() -> Self {
         Self {
             count: 0,
@@ -52,6 +34,8 @@ impl EdgeIntervals {
             last_period_us: None,
         }
     }
+
+/// Total edges observed.
 
     pub fn count(&self) -> u32 {
         self.count

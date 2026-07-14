@@ -11,18 +11,26 @@ const INJECTORS: [TleOutput; MAX_CYLINDERS] = [
     TleOutput::Injector4,
 ];
 
+/// Fuel pump relay output.
 pub const FUEL_PUMP: TleOutput = TleOutput::GpOut1;
+/// Spare general-purpose output 3.
 pub const RADIATOR_FAN: TleOutput = TleOutput::GpOut2;
+/// VVT solenoid low-side output.
 pub const AUX_GP_OUT_3: TleOutput = TleOutput::GpOut3;
 pub const AUX_GP_OUT_4: TleOutput = TleOutput::GpOut4;
+/// Crank trigger (VR/Hall) input pin.
 pub const VVT_SOLENOID: TleOutput = TleOutput::LowSide1;
 pub const IDLE_IAC: TleOutput = TleOutput::LowSide2;
 
+/// Cam trigger input pin.
 pub fn trigger_crank(pins: &BoardPins) -> GpioPin {
     pins.trigger_crank
 }
 
+/// Injector output for a cylinder (1-based), if wired.
+
 pub fn trigger_cam(pins: &BoardPins) -> GpioPin {
+    /// Ignition coil pin for a cylinder (1-based), if wired.
     pins.trigger_cam
 }
 

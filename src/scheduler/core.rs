@@ -10,6 +10,9 @@
 //! Windows are half-open `(now, now + window]`: consecutive tooth windows
 //! tile the cycle exactly, so each event arms **exactly once per cycle**.
 
+mod table_full;
+pub use table_full::TableFull;
+
 use crate::scheduler::{AngleEvent, Armed, ArmedBuf, EventId, MAX_EVENTS};
 
 #[derive(Debug)]
@@ -18,11 +21,8 @@ pub struct Scheduler {
     events: [Option<AngleEvent>; MAX_EVENTS],
 }
 
-/// The event table is full.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct TableFull;
-
 impl Scheduler {
+    /// Scheduler for an engine cycle of `cycle_deg` degrees.
     pub const fn new(cycle_deg: f32) -> Self {
         Self {
             cycle_deg,
@@ -57,6 +57,8 @@ impl Scheduler {
             None => Err(TableFull),
         }
     }
+
+/// Remove a pending event by id.
 
     pub fn clear_event(&mut self, id: EventId) {
         for slot in &mut self.events {

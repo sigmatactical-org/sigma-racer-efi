@@ -14,6 +14,7 @@ pub struct DwellModel {
     pub max_dwell_ms: f32,
 }
 
+/// Bring-up dwell numbers — replace with measured coil data.
 pub const PLACEHOLDER_DWELL: DwellModel = DwellModel {
     dwell_ms: Curve {
         x: [8.0, 11.0, 13.5, 16.0],
@@ -22,6 +23,7 @@ pub const PLACEHOLDER_DWELL: DwellModel = DwellModel {
     max_dwell_ms: 8.0,
 };
 
+/// Dwell time for the current battery voltage (linear vbatt comp).
 impl DwellModel {
     pub fn dwell_ms(&self, vbatt: f32) -> f32 {
         let d = self.dwell_ms.lookup(vbatt);

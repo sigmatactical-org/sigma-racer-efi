@@ -1,5 +1,8 @@
 //! Engine profile — tunable metadata independent of ECU board.
 
+mod profile_error;
+pub use profile_error::ProfileError;
+
 use crate::engine::EngineConfig;
 use crate::trigger::TriggerSetup;
 
@@ -23,6 +26,7 @@ pub struct EngineProfile {
 }
 
 impl EngineProfile {
+    /// Sanity-check the profile at boot.
     pub fn validate(&self) -> Result<(), ProfileError> {
         self.engine.validate()?;
 
@@ -53,25 +57,6 @@ impl EngineProfile {
         }
 
         Ok(())
-    }
-}
-
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum ProfileError {
-    EngineConfig(crate::engine::ConfigError),
-    InvalidCycleDegrees,
-    FireIntervalCount,
-    FireIntervalSum,
-    InvalidSparkPlugCount,
-    /// A rev limit was zero.
-    InvalidRevLimit,
-    /// The soft rev limit exceeds the hard rev limit.
-    RevLimitOrder,
-}
-
-impl From<crate::engine::ConfigError> for ProfileError {
-    fn from(err: crate::engine::ConfigError) -> Self {
-        Self::EngineConfig(err)
     }
 }
 

@@ -14,34 +14,17 @@
 //! Usage:
 //!   dl2mdf <capture.log> [--can <candump.log>] [--can-offset-s <f64>] [-o <out.mf4>]
 
+mod args;
+mod can_rec;
+mod sensor_rec;
+mod trigger_rec;
+pub(crate) use args::Args;
+pub(crate) use can_rec::CanRec;
+pub(crate) use sensor_rec::SensorRec;
+pub(crate) use trigger_rec::TriggerRec;
+
 use mdf4_rs::{DataType, DecodedValue, MdfWriter};
 use std::process::ExitCode;
-
-#[derive(Debug, Clone, Copy, PartialEq)]
-struct SensorRec {
-    t_us: u64,
-    /// vbatt_v, clt_c, iat_c, tps_map_v, an_volt1_v, an_volt2_v
-    values: [f64; 6],
-}
-
-#[derive(Debug, Clone, Copy, PartialEq)]
-struct TriggerRec {
-    t_us: u64,
-    /// 0 = crank, 1 = cam.
-    line: u64,
-    count: u64,
-    period_us: u64,
-    gap_ratio_x100: u64,
-}
-
-#[derive(Debug, Clone, Copy, PartialEq)]
-struct CanRec {
-    t_s: f64,
-    id: u32,
-    dlc: u8,
-    /// First 8 data bytes, big-endian as printed.
-    data: u64,
-}
 
 /// Parse one log line for a `DL,S` record.
 fn parse_sensor(line: &str) -> Option<SensorRec> {
@@ -97,13 +80,6 @@ fn parse_candump(line: &str) -> Option<CanRec> {
         data = (data << 8) | b as u64;
     }
     Some(CanRec { t_s, id, dlc, data })
-}
-
-struct Args {
-    dl_path: String,
-    can_path: Option<String>,
-    can_offset_s: f64,
-    out_path: String,
 }
 
 fn parse_args(argv: &[String]) -> Result<Args, String> {

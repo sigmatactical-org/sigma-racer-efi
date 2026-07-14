@@ -16,6 +16,7 @@ pub enum BorLevel {
 }
 
 impl BorLevel {
+    /// Production BOR target (2.7 V) so DDR survives brown-outs.
     pub const TARGET: Self = Self::Level3;
 }
 

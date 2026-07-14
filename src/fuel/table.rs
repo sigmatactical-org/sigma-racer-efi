@@ -7,19 +7,8 @@
 //! Values in any table shipped here are ⚠ [MEASURE] shapes, not calibration
 //! — the dyno owns the numbers (`efi.md` project rule).
 
-/// 1-D curve: `x` axis (strictly increasing) → `y`, linear between points.
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Curve<const N: usize> {
-    pub x: [f32; N],
-    pub y: [f32; N],
-}
-
-impl<const N: usize> Curve<N> {
-    pub fn lookup(&self, x: f32) -> f32 {
-        let (i, frac) = axis_index(&self.x, x);
-        self.y[i] + (self.y[i + 1] - self.y[i]) * frac
-    }
-}
+mod curve;
+pub use curve::Curve;
 
 /// 2-D table: `rows` (e.g. RPM) × `cols` (e.g. MAP kPa), bilinear.
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -30,6 +19,7 @@ pub struct Table<const R: usize, const C: usize> {
 }
 
 impl<const R: usize, const C: usize> Table<R, C> {
+    /// Bilinear interpolation with clamped edges.
     pub fn lookup(&self, row: f32, col: f32) -> f32 {
         let (r, rf) = axis_index(&self.row_axis, row);
         let (c, cf) = axis_index(&self.col_axis, col);

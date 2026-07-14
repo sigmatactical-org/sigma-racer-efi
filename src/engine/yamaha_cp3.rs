@@ -5,7 +5,10 @@ use crate::engine::{CYCLE_DEGREES_FOUR_STROKE, EngineProfile};
 use crate::engine::{EngineConfig, IgnitionMode, InjectionMode};
 use crate::trigger::{TriggerInputKind, TriggerSetup, TriggerWheel};
 
+/// Profile identifier reported over comms.
 pub const ID: &str = "Yamaha CP3";
+
+/// The Yamaha CP3 (XSR900) engine profile.
 
 pub fn profile() -> EngineProfile {
     EngineProfile {
