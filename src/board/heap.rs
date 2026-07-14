@@ -9,6 +9,7 @@
 static HEAP: embedded_alloc::LlffHeap = embedded_alloc::LlffHeap::empty();
 
 /// Initialize the heap. Call exactly once, before any allocation.
+#[allow(unsafe_code)]
 pub fn init() {
     use core::mem::MaybeUninit;
     const HEAP_BYTES: usize = 32 * 1024;

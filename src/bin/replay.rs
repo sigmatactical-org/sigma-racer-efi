@@ -19,6 +19,8 @@
 //! running on every pass. Timing jitter is executor-grade (~µs at the
 //! 1 MHz tick), which Phase 3 tolerates; scope the outputs to quantify it.
 
+#![forbid(unsafe_code)]
+
 use defmt::info;
 use embassy_executor::Spawner;
 use embassy_stm32::gpio::{Level, Output, Speed};

@@ -43,3 +43,12 @@ jobs:
 
       - name: Firmware release build
         run: cargo build --features firmware,engine-yamaha-cp3 --target thumbv7em-none-eabihf --release
+
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@1.97.0
+        with:
+          components: rustfmt
+      - run: cargo fmt --all -- --check

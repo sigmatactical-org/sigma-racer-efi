@@ -19,6 +19,7 @@
 //! | [`replay`] | crank/cam signal generator (bench Phase 3) |
 
 #![cfg_attr(not(test), no_std)]
+#![deny(unsafe_code)]
 
 pub mod board;
 pub mod comms;

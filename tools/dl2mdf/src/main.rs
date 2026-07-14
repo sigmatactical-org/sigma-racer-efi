@@ -14,6 +14,8 @@
 //! Usage:
 //!   dl2mdf <capture.log> [--can <candump.log>] [--can-offset-s <f64>] [-o <out.mf4>]
 
+#![forbid(unsafe_code)]
+
 mod args;
 mod can_rec;
 mod sensor_rec;
