@@ -31,6 +31,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: embedded/sigma-racer-efi
+          add-rust-environment-hash-key: false
 
       - name: Host tests
         run: cargo test
