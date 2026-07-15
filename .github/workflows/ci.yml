@@ -32,6 +32,7 @@ jobs:
         with:
           workspaces: embedded/sigma-racer-efi
           add-rust-environment-hash-key: false
+          key: ${{ hashFiles('embedded/sigma-racer-efi/Cargo.lock', 'embedded/sigma-racer-efi/Cargo.toml', 'embedded/sigma-racer-efi/rust-toolchain.toml', 'embedded/sigma-racer-efi/.cargo/config.toml') }}
 
       - name: Host tests
         run: cargo test
