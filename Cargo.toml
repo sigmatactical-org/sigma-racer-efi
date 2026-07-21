@@ -3,7 +3,7 @@ name = "sigma-racer-efi"
 version = "0.1.0"
 description = "Embassy firmware for microRusEFI (STM32F767) — engine-agnostic ECU core"
 edition = "2024"
-rust-version = "1.97.0"
+rust-version = "1.97.1"
 license = "MIT OR Apache-2.0"
 authors = ["Sigma Tactical Group contributors <https://github.com/sigmatactical-org>"]
 homepage = "https://sigmatactical.org"
@@ -48,7 +48,7 @@ firmware = [
 libm = "0.2.16"
 # M7 safety-bus CAN contract — single source of truth shared with the cockpit
 # (sigma-racer-sidearm). no_std via bounded dbc-rs buffers.
-sigma-racer-sidearm = { git = "https://github.com/sigmatactical-org/sigma-racer-sidearm.git", rev = "1ce500c", default-features = false, features = ["alloc"] }
+sigma-racer-sidearm = { git = "https://github.com/sigmatactical-org/sigma-racer-sidearm.git", rev = "5a43bb6", default-features = false, features = ["alloc"] }
 
 embassy-stm32 = { version = "0.6.0", optional = true, features = [
     "defmt",
